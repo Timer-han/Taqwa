@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const TestApp());
+}
+
+class TestApp extends StatelessWidget {
+  const TestApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Directionality(
+      textDirection: TextDirection.ltr,
+      child: Icon(
+        Icons.camera,
+        color: Color.fromARGB(255, 19, 93, 63),
+        size: 500,
+      ),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
