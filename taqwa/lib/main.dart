@@ -3,7 +3,7 @@ import 'package:window_size/window_size.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  setWindowTitle('My App'); // Название окна
+  setWindowTitle('Taqua'); // Название окна
   setWindowMinSize(const Size(732, 1308)); // Минимальный размер
   setWindowMaxSize(const Size(732, 1308)); // Максимальный размер
   runApp(const TestImage());
