@@ -1,11 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:window_size/window_size.dart';
 
 void main() {
-  runApp(const TestApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  setWindowTitle('My App'); // Название окна
+  setWindowMinSize(const Size(732, 1308)); // Минимальный размер
+  setWindowMaxSize(const Size(732, 1308)); // Максимальный размер
+  runApp(const TestImage());
 }
 
-class TestApp extends StatelessWidget {
-  const TestApp({super.key});
+class TestImage extends StatelessWidget {
+  const TestImage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: SizedBox(
+            child: Image.asset(
+              'resources/images/Bismillah.jpeg',
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TestIcon extends StatelessWidget {
+  const TestIcon({super.key});
 
   @override
   Widget build(BuildContext context) {
