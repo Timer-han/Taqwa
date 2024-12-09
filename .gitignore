@@ -1,3 +1,4 @@
 .idea
 /src/config/*.json
 /src/.env
+*__pycache__*

@@ -1,10 +1,9 @@
 from .mongo import MongoDatabase
 from typing import Optional
 import logging
-from dataclasses import asdict
 
 from src.internal.models.user import User
-from src.pkg.constants.roles import *
+
 
 telegram_id_column = "telegram_id"
 

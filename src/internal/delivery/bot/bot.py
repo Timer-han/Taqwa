@@ -60,4 +60,5 @@ class BotHandler:
             response = LEVEL_ORIENTED_RESPONSE[level]
 
             await callback.message.answer(response)
+            await callback.message.answer(FIRST_LESSON_TAKE_OFFER)
             await callback.answer()
