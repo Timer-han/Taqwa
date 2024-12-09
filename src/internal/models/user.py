@@ -7,20 +7,6 @@ from typing import Optional, List
 from src.pkg.constants.roles import *
 
 
-class StartBotUsingRequest:
-    telegram_id: int
-    username: str
-
-    def __init__(self, message: Message):
-        self.telegram_id = message.from_user.id
-        self.username = message.from_user.username
-
-    def __str__(self):
-        return (f"StartBotUsingRequest("
-                f"id={self.telegram_id}, "
-                f"username={self.username}")
-
-
 class StartBotUsingResponse:
     is_user_exists: bool
 

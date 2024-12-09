@@ -25,3 +25,15 @@ class UserRepository:
     def create_user(self, user: User):
         logging.info("creating_user: %s", user.dict(exclude_none=True))
         self.collection.insert_one(user.dict(exclude_none=True))
+
+    def update_user(self, user: User):
+        logging.info("updating_user: %s", user.dict(exclude_none=True))
+        document = self.collection.find_one_and_update(
+            {telegram_id_column: user.telegram_id},
+            {"$set": user.dict(exclude_none=True)},
+            return_document=True,
+        )
+
+        user_data = {field: document.get(field) for field in User.__annotations__.keys()}
+        logging.info("updated_user: %s", user_data)
+        return User(**user_data)

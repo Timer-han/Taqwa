@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 
 from aiogram import Router, Bot
@@ -7,8 +8,9 @@ from aiogram.filters import Command
 from aiogram import F
 
 from src.internal.service.user import UserService
-from src.internal.models.user import StartBotUsingRequest
+from src.internal.models.user import User
 from .templates import *
+from src.pkg.constants.roles import *
 
 
 class BotHandler:
@@ -22,8 +24,13 @@ class BotHandler:
     def register_handlers(self):
         @self.router.message(Command("start"))
         async def start_handler(message: Message):
-            request = StartBotUsingRequest(message)
-            response = self.user_service.start_bot_using(request)
+            user = User(
+                telegram_id=message.from_user.id,
+                telegram_username=message.from_user.username,
+                role=USER,
+                created_at=datetime.now()
+            )
+            response = self.user_service.start_bot_using(user)
 
             if response.is_user_exists:
                 await message.answer(START_HANDLER_RESPONSE)
@@ -37,9 +44,20 @@ class BotHandler:
                 ])
                 await message.answer(NEW_USER_RESPONSE, reply_markup=new_user_kbd)
 
-        @self.router.callback_query(F.text.startswith("level_"))
+        @self.router.callback_query(F.data.startswith("level_"))
         async def handle_level_callback(callback: CallbackQuery):
-            level = callback.data.split('-')[1]
-            logging.info("level: %s", level)
-            await callback.message.answer("Отлично, давай начнем изучение")
+            level = callback.data.split('_')[1]
+            logging.info("user(%s) selected %s level", callback.from_user.username, level)
+
+            user = User(
+                telegram_id=callback.from_user.id,
+                telegram_username=callback.from_user.username,
+                level=level,
+                updated_at=datetime.now()
+            )
+            self.user_service.update_user_info(user)
+
+            response = LEVEL_ORIENTED_RESPONSE[level]
+
+            await callback.message.answer(response)
             await callback.answer()
