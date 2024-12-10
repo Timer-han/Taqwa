@@ -6,12 +6,15 @@ from aiogram.types import Message
 from aiogram.types import CallbackQuery
 from aiogram.filters import Command
 from aiogram import F
+from aiogram.fsm.context import FSMContext
 
 from src.internal.service.user import UserService
 from src.internal.models.user import User
 from .templates.messages import *
 from .templates.keyboards import *
+from .templates.states import *
 from src.pkg.constants.roles import *
+from src.pkg.utils.utils import *
 
 
 class BotHandler:
@@ -40,7 +43,7 @@ class BotHandler:
                 # display buttons for determine level of knowledge
                 await message.answer(KNOWLEDGE_LEVEL_DETERMINE_MSG, reply_markup=KNOWLEDGE_LEVEL_DETERMINE_KBD)
 
-        # /help
+        # /help || bot_help button
         @self.router.message(Command("help"))
         @self.router.message(F.text.contains(bot_help))
         async def help_info(message: Message):
@@ -56,17 +59,60 @@ class BotHandler:
         async def feedback(message: Message):
             await message.answer("not implemented")
 
-        # /lesson
+        # /lesson || start_lesson button
         @self.router.message(Command("lesson"))
         @self.router.message(F.text.contains(start_lesson))
         async def get_lesson(message: Message):
             await message.answer("not implemented")
 
-        # /profile
+        # /profile || profile button
         @self.router.message(Command("profile"))
         @self.router.message(F.text.contains(profile))
         async def get_profile(message: Message):
             await message.answer("not implemented")
+
+        # /suggest || question_suggest button
+        @self.router.message(Command("suggest"))
+        @self.router.message(F.text.contains(question_suggest))
+        async def suggest_question(message: Message, state: FSMContext):
+            await message.answer(QUESTION_SUGGEST_MSG)
+            await state.set_state(SuggestQuestionState.waiting_for_question)
+
+        @self.router.message(SuggestQuestionState.waiting_for_question)
+        async def receive_question(message: Message, state: FSMContext):
+            logging.info("receive question: %s", message.text)
+            await state.update_data(question=message.text)
+            await message.answer(QUESTION_RECEIVE_MSG)
+            await state.set_state(SuggestQuestionState.waiting_for_answers)
+
+        @self.router.message(SuggestQuestionState.waiting_for_answers)
+        async def receive_answers(message: Message, state: FSMContext):
+            logging.info("receive answers: %s", message.text)
+
+            answers = [answer.strip() for answer in message.text.split(",")]
+            if len(answers) != 4:
+                await message.answer("Пожалуйста, введите 4 варианта ответа")
+                return
+
+            data = await state.get_data()
+            question = await state.get_value("question")
+
+            txt = CORRECT_ANSWERS_RECEIVE_MSG
+            callbacks = generate_callbacks("suggest", len(answers))
+            kbd = create_inline_keyboard(answers, callbacks)
+
+            await state.update_data(answers=answers)
+            await message.answer(txt, reply_markup=kbd)
+            # await state.set_state(SuggestQuestionState.waiting_for_correct_answer)
+
+        # suggest_ selected
+        @self.router.callback_query(F.data.startswith("suggest_"))
+        async def handle_suggested_correct_answer(callback: CallbackQuery):
+            correct_answer = callback.data.split('_')  # suggest_1 -> 1
+            logging.info("correct answer %s chosen", correct_answer)
+            # TODO: make database saving for this question
+            await callback.message.edit_text(QUESTION_SUGGEST_GRATITUDE_MSG)
+            await callback.answer()
 
         # level_ selected
         @self.router.callback_query(F.data.startswith("level_"))
