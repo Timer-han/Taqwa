@@ -1,10 +1,8 @@
+import uuid
+
 from datetime import datetime
-from aiogram.types import Message
-from dataclasses import asdict
 from pydantic import BaseModel
 from typing import Optional, List
-
-from src.pkg.constants.roles import *
 
 
 class StartBotUsingResponse:
@@ -15,7 +13,8 @@ class StartBotUsingResponse:
 
 
 class User(BaseModel):
-    telegram_id: int
+    uuid: Optional[str] = None
+    telegram_id: Optional[int] = None
     telegram_username: Optional[str] = None
     strike: Optional[int] = None
     role: Optional[str] = "user"

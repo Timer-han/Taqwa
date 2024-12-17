@@ -1,15 +1,19 @@
 from datetime import datetime
 import logging
 
+from uuid import uuid4
 from aiogram import Router, Bot
 from aiogram.types import Message
 from aiogram.types import CallbackQuery
-from aiogram.filters import Command
+from aiogram.filters import Command, StateFilter
 from aiogram import F
 from aiogram.fsm.context import FSMContext
 
 from src.internal.service.user import UserService
+from src.internal.service.suggest import SuggestService
+from src.internal.service.question import QuestionService
 from src.internal.models.user import User
+from src.internal.models.suggest import Suggest
 from .templates.messages import *
 from .templates.keyboards import *
 from .templates.states import *
@@ -18,9 +22,11 @@ from src.pkg.utils.utils import *
 
 
 class BotHandler:
-    def __init__(self, bot: Bot, user_service: UserService):
+    def __init__(self, bot: Bot, user_svc: UserService, suggest_svc: SuggestService, question_svc: QuestionService):
         self.bot = bot
-        self.user_service = user_service
+        self.user_service = user_svc
+        self.suggest_service = suggest_svc
+        self.question_service = question_svc
         self.router = Router()
 
         self.register_handlers()
@@ -30,6 +36,7 @@ class BotHandler:
         @self.router.message(Command("start"))
         async def start_handler(message: Message):
             user = User(
+                uuid=str(uuid4()),
                 telegram_id=message.from_user.id,
                 telegram_username=message.from_user.username,
                 role=USER,
@@ -75,27 +82,35 @@ class BotHandler:
         @self.router.message(Command("suggest"))
         @self.router.message(F.text.contains(question_suggest))
         async def suggest_question(message: Message, state: FSMContext):
-            await message.answer(QUESTION_SUGGEST_MSG)
+            await message.answer(QUESTION_SUGGEST_MSG, parse_mode="HTML", reply_markup=QUESTION_SUGGEST_KBD)
             await state.set_state(SuggestQuestionState.waiting_for_question)
 
         @self.router.message(SuggestQuestionState.waiting_for_question)
         async def receive_question(message: Message, state: FSMContext):
+            if message.text == question_cancel:
+                logging.info("sent cancel question message")
+                await state.clear()
+                await message.answer(QUESTION_CANCEL_MSG, reply_markup=MAIN_MENU_KBD)
+                return
+
             logging.info("receive question: %s", message.text)
             await state.update_data(question=message.text)
-            await message.answer(QUESTION_RECEIVE_MSG)
+            await message.answer(QUESTION_RECEIVE_MSG, parse_mode='HTML')
             await state.set_state(SuggestQuestionState.waiting_for_answers)
 
         @self.router.message(SuggestQuestionState.waiting_for_answers)
         async def receive_answers(message: Message, state: FSMContext):
-            logging.info("receive answers: %s", message.text)
-
-            answers = [answer.strip() for answer in message.text.split(",")]
-            if len(answers) != 4:
-                await message.answer("Пожалуйста, введите 4 варианта ответа")
+            if message.text == question_cancel:
+                logging.info("sent cancel question message")
+                await state.clear()
+                await message.answer(QUESTION_CANCEL_MSG, reply_markup=MAIN_MENU_KBD)
                 return
 
-            data = await state.get_data()
-            question = await state.get_value("question")
+            logging.info("receive answers: %s", message.text)
+            answers = [answer.strip() for answer in message.text.split("\n")]
+            if len(answers) < 2 or len(answers) > 5:
+                await message.answer("Пожалуйста, введите от 2 до 5 вариантов ответа")
+                return
 
             txt = CORRECT_ANSWERS_RECEIVE_MSG
             callbacks = generate_callbacks("suggest", len(answers))
@@ -103,16 +118,30 @@ class BotHandler:
 
             await state.update_data(answers=answers)
             await message.answer(txt, reply_markup=kbd)
-            # await state.set_state(SuggestQuestionState.waiting_for_correct_answer)
 
         # suggest_ selected
         @self.router.callback_query(F.data.startswith("suggest_"))
-        async def handle_suggested_correct_answer(callback: CallbackQuery):
-            correct_answer = callback.data.split('_')  # suggest_1 -> 1
+        async def handle_suggested_correct_answer(callback: CallbackQuery, state: FSMContext):
+            correct_answer = callback.data.split('_')[1]  # suggest_1 -> 1
             logging.info("correct answer %s chosen", correct_answer)
-            # TODO: make database saving for this question
+
+            if not correct_answer.isnumeric():
+                await callback.answer("Что-то тут не так, если не получается решить проблему, напиши нам)")
+                return
+
+            question = await state.get_value("question")
+            answers = await state.get_value("answers")
+            suggest = Suggest(
+                uuid=str(uuid4()),
+                question=question,
+                answers=answers,
+                correct_id=int(correct_answer),
+                created_at=datetime.now(),
+            )
+            self.suggest_service.create_suggest(suggest, callback.from_user.id)
+
             await callback.message.edit_text(QUESTION_SUGGEST_GRATITUDE_MSG)
-            await callback.answer()
+            await callback.answer(reply_markup=MAIN_MENU_KBD)
 
         # level_ selected
         @self.router.callback_query(F.data.startswith("level_"))
@@ -120,13 +149,7 @@ class BotHandler:
             level = callback.data.split('_')[1]  # level_1 -> 1
             logging.info("user(%s) selected %s level", callback.from_user.username, level)
 
-            user = User(
-                telegram_id=callback.from_user.id,
-                telegram_username=callback.from_user.username,
-                level=level,
-                updated_at=datetime.now()
-            )
-            self.user_service.update_user_info(user)
+            self.user_service.set_knowledge_level(callback.from_user.id, int(level))
 
             response = LEVEL_ORIENTED_RESPONSE_MSG[level]
 

@@ -5,6 +5,7 @@ start_lesson = "📝Начать урок"
 bot_help = "❓Как пользоваться"
 profile = "🏡Профиль"
 question_suggest = "📚Предложить вопрос"
+question_cancel = "Отменить вопрос"
 
 MAIN_MENU_KBD = ReplyKeyboardMarkup(
     keyboard=[
@@ -24,3 +25,7 @@ KNOWLEDGE_LEVEL_DETERMINE_KBD = InlineKeyboardMarkup(
     ]]
 )
 
+QUESTION_SUGGEST_KBD = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text=question_cancel)]],
+    resize_keyboard=True,
+)

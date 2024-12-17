@@ -5,6 +5,7 @@ import logging
 from src.internal.models.user import User
 
 
+uuid_column = "uuid"
 telegram_id_column = "telegram_id"
 
 
@@ -28,7 +29,7 @@ class UserRepository:
     def update_user(self, user: User):
         logging.info("updating_user: %s", user.dict(exclude_none=True))
         document = self.collection.find_one_and_update(
-            {telegram_id_column: user.telegram_id},
+            {uuid_column: user.uuid},
             {"$set": user.dict(exclude_none=True)},
             return_document=True,
         )

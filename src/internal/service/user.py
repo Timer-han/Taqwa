@@ -1,5 +1,5 @@
 from src.internal.storage.user import UserRepository
-from src.internal.models.user import User, StartBotUsingResponse
+from src.internal.models.user import *
 
 
 class UserService:
@@ -15,5 +15,9 @@ class UserService:
 
         return StartBotUsingResponse(False)
 
-    def update_user_info(self, request: User):
-        self.repository.update_user(request)
+    def set_knowledge_level(self, telegram_id: int, level: int):
+        user = self.repository.user_by_telegram_id(telegram_id)
+        user.level = level
+        user.updated_at = datetime.now()
+
+        self.repository.update_user(user)
