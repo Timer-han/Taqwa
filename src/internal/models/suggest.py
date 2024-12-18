@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List
 
 from .user import User as BaseUser
@@ -38,3 +38,9 @@ class Suggest(BaseModel):
             telegram_username=user.telegram_username,
             role=user.role,
         )
+
+
+class SuggestRequest(BaseModel):
+    question: Optional[str] = None
+    answers: Optional[List[str]] = None
+    correctAnswer: Optional[str] = None

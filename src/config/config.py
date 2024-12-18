@@ -10,6 +10,12 @@ class BotConfig:
 
 
 @dataclass
+class Application:
+    host: str
+    port: str
+
+
+@dataclass
 class DbConfig:
     host: str
     port: str
@@ -21,6 +27,7 @@ class DbConfig:
 @dataclass
 class Config:
     bot: BotConfig
+    app: Application
     database: DbConfig
 
 
@@ -28,6 +35,9 @@ def load_config() -> Config:
     load_dotenv()
 
     api_token: str = os.getenv("API_TOKEN")
+
+    application_host: str = os.getenv("APP_HOST")
+    application_port: str = os.getenv("APP_PORT")
 
     db_host: str = os.getenv("DB_HOST")
     db_port: str = os.getenv("DB_PORT")
@@ -37,6 +47,10 @@ def load_config() -> Config:
 
     return Config(
         bot=BotConfig(api_token=api_token),
+        app=Application(
+            host=application_host,
+            port=application_port,
+        ),
         database=DbConfig(
             host=db_host,
             port=db_port,

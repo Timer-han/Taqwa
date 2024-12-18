@@ -5,7 +5,7 @@ from uuid import uuid4
 from aiogram import Router, Bot
 from aiogram.types import Message
 from aiogram.types import CallbackQuery
-from aiogram.filters import Command, StateFilter
+from aiogram.filters import Command
 from aiogram import F
 from aiogram.fsm.context import FSMContext
 
@@ -27,14 +27,15 @@ class BotHandler:
         self.user_service = user_svc
         self.suggest_service = suggest_svc
         self.question_service = question_svc
-        self.router = Router()
 
+        self.router = Router()
         self.register_handlers()
 
     def register_handlers(self):
         # /start
         @self.router.message(Command("start"))
         async def start_handler(message: Message):
+            logging.info("starting")
             user = User(
                 uuid=str(uuid4()),
                 telegram_id=message.from_user.id,
