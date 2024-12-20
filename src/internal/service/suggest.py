@@ -11,8 +11,6 @@ class SuggestService:
         self.user_repository = user
 
     def create_suggest(self, suggest: Suggest, telegram_id: int):
-        if telegram_id == DEFAULT_TELEGRAM_ID:
-            
         user = self.user_repository.user_by_telegram_id(telegram_id)
 
         suggest.set_proposing_user(user)
