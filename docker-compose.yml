@@ -11,7 +11,7 @@ services:
       MONGO_INITDB_DATABASE: test
     restart: always
     volumes:
-      - C:\Users\insha\AppData\Local\Docker\wsl\data:/data/db
+      - mongodata:/data/db
   
   backend:
     build:
