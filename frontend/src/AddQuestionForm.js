@@ -50,8 +50,8 @@ const AddQuestionForm = () => {
     };
 
     console.log("Отправляем данные:", payload);
-    uri = "http://backend:4000/question/suggest"
-    console.log("uri: ", uri)
+    const uri = "http://backend:4000/question/suggest";
+    console.log("uri: ", uri);
 
     try {
       const response = await fetch(uri, {
@@ -75,8 +75,8 @@ const AddQuestionForm = () => {
       alert("Ошибка сети.");
     }
 
-    uri = "http://localhost:4000/question/suggest"
-    console.log("uri: ", uri)
+    uri = "http://localhost:4000/question/suggest";
+    console.log("uri: ", uri);
 
     try {
       const response = await fetch(uri, {
