@@ -33,7 +33,7 @@ class Suggest(BaseModel):
 
     def set_proposing_user(self, user: BaseUser):
         self.proposing = ProposingUser(
-            uuid=user.uuid,
+            uuid=str(user.uuid),
             telegram_id=user.telegram_id,
             telegram_username=user.telegram_username,
             role=user.role,
