@@ -10,7 +10,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: admin
       MONGO_INITDB_DATABASE: test
     restart: always
-    entrypoint: ["mkdir", "data/migrations"]
     volumes:
       - mongodata:/data/db
   
@@ -35,4 +34,3 @@ services:
 
 volumes:
   mongodata:
-    driver: local
