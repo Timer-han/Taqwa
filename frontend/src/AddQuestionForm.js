@@ -52,7 +52,9 @@ const AddQuestionForm = () => {
     console.log("Отправляем данные:", payload);
 
     try {
-      const response = await fetch("http://backend:4000/question/suggest", {
+      uri = "http://backend:4000/question/suggest"
+      console.log("uri: ", uri)
+      const response = await fetch(uri, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
