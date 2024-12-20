@@ -10,8 +10,10 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: admin
       MONGO_INITDB_DATABASE: test
     restart: always
+    entrypoint: ["mkdir", "data/migrations"]
     volumes:
       - mongodata:/data/db
+      - migrations:/data/migrations
   
   backend:
     build:
@@ -34,3 +36,7 @@ services:
 
 volumes:
   mongodata:
+  migrations:
+    driver: local
+    driver_opts:
+      device: /src/migrations
