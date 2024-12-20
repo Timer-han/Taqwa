@@ -2,6 +2,7 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:6-jammy
+    container_name: database
     ports:
       - '27017:27017'
     environment:
@@ -10,8 +11,26 @@ services:
       MONGO_INITDB_DATABASE: test
     restart: always
     volumes:
-      - /tmp/mongo-data:/data/db
+      - C:\Users\insha\AppData\Local\Docker\wsl\data:/data/db
+  
+  backend:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - 4000:4000
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - 3000:3000
 
 
 volumes:
-  dbdata:
+  mongodata:

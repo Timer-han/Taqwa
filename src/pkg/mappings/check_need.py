@@ -1,4 +1,4 @@
-from src.pkg.constants.roles import *
+from pkg.constants.roles import *
 
 
 CHECK_NEED_MAP = {

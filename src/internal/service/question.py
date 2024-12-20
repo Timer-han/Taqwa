@@ -1,4 +1,4 @@
-from src.internal.storage.question import QuestionRepository
+from internal.storage.question import QuestionRepository
 
 
 class QuestionService:

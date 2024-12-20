@@ -2,10 +2,10 @@
 # from aiogram.enums.parse_mode import ParseMode
 # from aiogram.fsm.storage.memory import MemoryStorage
 #
-# from src.internal.storage.user import UserRepository
-# from src.internal.service.user import UserService
-# from src.config.config import EnvironmentSettings
-# from src.internal.delivery.bot.bot import BotHandler
+# from internal.storage.user import UserRepository
+# from internal.service.user import UserService
+# from config.config import EnvironmentSettings
+# from internal.delivery.bot.bot import BotHandler
 #
 #
 # class Application:

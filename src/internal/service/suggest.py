@@ -1,7 +1,8 @@
-from src.internal.storage.suggest import SuggestRepository
-from src.internal.storage.user import UserRepository
-from src.internal.models.suggest import Suggest
-from src.pkg.mappings.check_need import *
+from internal.storage.suggest import SuggestRepository
+from internal.storage.user import UserRepository
+from internal.models.suggest import Suggest
+from pkg.mappings.check_need import *
+from pkg.constants.constants import *
 
 
 class SuggestService:
@@ -10,6 +11,8 @@ class SuggestService:
         self.user_repository = user
 
     def create_suggest(self, suggest: Suggest, telegram_id: int):
+        if telegram_id == DEFAULT_TELEGRAM_ID:
+            
         user = self.user_repository.user_by_telegram_id(telegram_id)
 
         suggest.set_proposing_user(user)

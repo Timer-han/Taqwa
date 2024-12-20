@@ -8,17 +8,17 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.internal.storage.mongo import MongoDatabase
-from src.internal.storage.user import UserRepository
-from src.internal.storage.suggest import SuggestRepository
-from src.internal.storage.question import QuestionRepository
-from src.internal.service.user import UserService
-from src.internal.service.suggest import SuggestService
-from src.internal.service.question import QuestionService
-from src.internal.delivery.bot.bot import BotHandler
-from src.internal.delivery.http.question import QuestionHTTPHandler
-from src.config.config import load_config
-from src.pkg.logger.logger import *
+from internal.storage.mongo import MongoDatabase
+from internal.storage.user import UserRepository
+from internal.storage.suggest import SuggestRepository
+from internal.storage.question import QuestionRepository
+from internal.service.user import UserService
+from internal.service.suggest import SuggestService
+from internal.service.question import QuestionService
+from internal.delivery.bot.bot import BotHandler
+from internal.delivery.http.question import QuestionHTTPHandler
+from config.config import load_config
+from pkg.logger.logger import *
 
 cfg = load_config()
 app = FastAPI()
@@ -86,7 +86,7 @@ async def start_bot():
 
 
 async def start_fastapi():
-    config = uvicorn.Config("src.main:app", host=cfg.app.host, port=int(cfg.app.port), reload=True)
+    config = uvicorn.Config("main:app", host=cfg.app.host, port=int(cfg.app.port), reload=True)
     server = uvicorn.Server(config)
     set_uvicorn_logger()
     await server.serve()

@@ -2,7 +2,7 @@ from .mongo import MongoDatabase
 from typing import Optional
 import logging
 
-from src.internal.models.user import User
+from internal.models.user import User
 
 
 uuid_column = "uuid"

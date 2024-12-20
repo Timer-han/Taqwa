@@ -1,5 +1,5 @@
-from src.internal.storage.user import UserRepository
-from src.internal.models.user import *
+from internal.storage.user import UserRepository
+from internal.models.user import *
 
 
 class UserService:

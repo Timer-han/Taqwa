@@ -5,10 +5,11 @@ from datetime import datetime
 
 from uuid import uuid4
 
-from src.internal.service.user import UserService
-from src.internal.service.suggest import SuggestService
-from src.internal.service.question import QuestionService
-from src.internal.models.suggest import Suggest, SuggestRequest
+from internal.service.user import UserService
+from internal.service.suggest import SuggestService
+from internal.service.question import QuestionService
+from internal.models.suggest import Suggest, SuggestRequest
+from pkg.constants.constants import *
 
 
 class QuestionHTTPHandler:
@@ -31,6 +32,6 @@ class QuestionHTTPHandler:
                 correct_id=request.correctAnswer,
                 created_at=datetime.now(),
             )
-            self.suggest_service.create_suggest(suggest, 479930412)
+            self.suggest_service.create_suggest(suggest, DEFAULT_TELEGRAM_ID)
 
             return {"message": "saved question"}

@@ -2,7 +2,7 @@ from .mongo import MongoDatabase
 from typing import Optional
 import logging
 
-from src.internal.models.suggest import Suggest
+from internal.models.suggest import Suggest
 
 
 class SuggestRepository:

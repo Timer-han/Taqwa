@@ -1,4 +1,5 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from internal.models.user import User
 
 
 def generate_callbacks(prefix: str, n: int) -> [str]:

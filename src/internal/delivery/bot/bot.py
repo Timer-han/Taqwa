@@ -9,16 +9,16 @@ from aiogram.filters import Command
 from aiogram import F
 from aiogram.fsm.context import FSMContext
 
-from src.internal.service.user import UserService
-from src.internal.service.suggest import SuggestService
-from src.internal.service.question import QuestionService
-from src.internal.models.user import User
-from src.internal.models.suggest import Suggest
+from internal.service.user import UserService
+from internal.service.suggest import SuggestService
+from internal.service.question import QuestionService
+from internal.models.user import User
+from internal.models.suggest import Suggest
 from .templates.messages import *
 from .templates.keyboards import *
 from .templates.states import *
-from src.pkg.constants.roles import *
-from src.pkg.utils.utils import *
+from pkg.constants.roles import *
+from pkg.utils.utils import *
 
 
 class BotHandler:
