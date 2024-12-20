@@ -1,7 +1,7 @@
 [
     {
         "uuid": "00000000-0000-0000-0000-000000000000",
-        "telegram_id": "0000000000",
+        "telegram_id": -1,
         "telegram_username": "default",
         "role": "admin"
     }
