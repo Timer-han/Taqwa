@@ -15,23 +15,23 @@ services:
       - mongodata:/data/db
       - migrations:/data/migrations
   
-  backend:
-    build:
-      context: ./src
-      dockerfile: Dockerfile
-    container_name: backend
-    restart: always
-    ports:
-      - 4000:4000
+  # backend:
+  #   build:
+  #     context: ./src
+  #     dockerfile: Dockerfile
+  #   container_name: backend
+  #   restart: always
+  #   ports:
+  #     - 4000:4000
   
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: frontend
-    restart: always
-    ports:
-      - 3000:3000
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   container_name: frontend
+  #   restart: always
+  #   ports:
+  #     - 3000:3000
 
 
 volumes:
@@ -40,4 +40,5 @@ volumes:
   migrations:
     driver: local
     driver_opts:
+      type: none
       device: /src/migrations
