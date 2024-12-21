@@ -30,6 +30,8 @@ services:
     restart: always
     ports:
       - 3000:3000
+    environment:
+      - BACKEND_URL=http://$HOST_IP:4000
 
 
 volumes:

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./App.css"; // Стили (опционально)
 
+const backendUrl = process.env.BACKEND_URL || "http://localhost:4000";
+
 const AddQuestionForm = () => {
   const [question, setQuestion] = useState(""); // Поле для вопроса
   const [answers, setAnswers] = useState(["", "", "", ""]); // Массив с вариантами ответа
@@ -50,7 +52,7 @@ const AddQuestionForm = () => {
     };
 
     console.log("Отправляем данные:", payload);
-    var uri = "http://localhost:4000/question/suggest";
+    var uri = backendUrl + "/question/suggest";
     console.log("uri: ", uri);
 
     try {
