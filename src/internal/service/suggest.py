@@ -1,3 +1,5 @@
+import logging
+
 from internal.storage.suggest import SuggestRepository
 from internal.storage.user import UserRepository
 from internal.models.suggest import Suggest
@@ -12,6 +14,9 @@ class SuggestService:
 
     def create_suggest(self, suggest: Suggest, telegram_id: int):
         user = self.user_repository.user_by_telegram_id(telegram_id)
+        if user is None:
+            logging.warning("no user with telegram_id: %s", telegram_id)
+            return
 
         suggest.set_proposing_user(user)
         suggest.check_need_count = CHECK_NEED_MAP.get(user.role)
