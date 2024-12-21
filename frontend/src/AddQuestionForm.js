@@ -65,7 +65,7 @@ const AddQuestionForm = () => {
       if (response.ok) {
         alert("Вопрос успешно добавлен!");
         setQuestion("");
-        setAnswers([""]);
+        setAnswers(["", "", "", ""]);
         setCorrectAnswer("");
       } else {
         alert("Ошибка при добавлении вопроса.");
