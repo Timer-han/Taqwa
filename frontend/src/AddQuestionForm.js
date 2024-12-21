@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./App.css"; // Стили (опционально)
 
-const backendUrl = process.env.BACKEND_URL || "http://localhost:4000";
+const backendUrl = process.env.BACKEND_URL || "http://84.201.170.73:4000";
 
 const AddQuestionForm = () => {
   const [question, setQuestion] = useState(""); // Поле для вопроса
