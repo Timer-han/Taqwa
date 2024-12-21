@@ -7,9 +7,11 @@ RUN apk --no-cache add curl
 COPY . .
 RUN npm run build
 
+CMD npm start
+
 FROM nginx:alpine
 
-COPY --from=build /dist /usr/share/nginx/html
+COPY --from=build /build /usr/share/nginx/html
 COPY --from=build nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 3000
