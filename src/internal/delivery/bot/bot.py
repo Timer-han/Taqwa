@@ -43,10 +43,7 @@ class BotHandler:
             )
             response, is_existed_before = self.user_service.start_bot_using(user)
             if is_existed_before:
-                kbd = MAIN_MENU_KBD
-                if response.role == ADMIN:
-                    add_reply_keyboard_button(kbd, question_review)
-                await message.answer(START_HANDLER_RESPONSE_MSG, reply_markup=kbd)
+                await message.answer(START_HANDLER_RESPONSE_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
             else:
                 # display buttons for determine level of knowledge
                 await message.answer(KNOWLEDGE_LEVEL_DETERMINE_MSG, reply_markup=KNOWLEDGE_LEVEL_DETERMINE_KBD)
@@ -79,13 +76,8 @@ class BotHandler:
         async def get_profile(message: Message):
             token = generate_token(message.from_user.id, self.cfg.app.secret_key)
             url = self.cfg.other.dns_name + "?token=" + token
-            kbd = MAIN_MENU_KBD
 
-            user = self.user_service.get_by_telegram_id(message.from_user.id)
-            if user.role == ADMIN:
-                add_reply_keyboard_button(kbd, question_review)
-
-            await message.answer(PROFILE_MSG+url, reply_markup=kbd)
+            await message.answer(PROFILE_MSG+url, reply_markup=self.set_main_menu_kbd(message.from_user.id))
 
         # /suggest || question_suggest button
         @self.router.message(Command("suggest"))
@@ -99,7 +91,7 @@ class BotHandler:
             if message.text == question_cancel:
                 logging.info("sent cancel question message")
                 await state.clear()
-                await message.answer(QUESTION_CANCEL_MSG, reply_markup=MAIN_MENU_KBD)
+                await message.answer(QUESTION_CANCEL_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
                 return
 
             logging.info("receive question: %s", message.text)
@@ -112,7 +104,7 @@ class BotHandler:
             if message.text == question_cancel:
                 logging.info("sent cancel question message")
                 await state.clear()
-                await message.answer(QUESTION_CANCEL_MSG, reply_markup=MAIN_MENU_KBD)
+                await message.answer(QUESTION_CANCEL_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
                 return
 
             logging.info("receive answers: %s", message.text)
@@ -148,7 +140,7 @@ class BotHandler:
             self.suggest_service.create_suggest(suggest, callback.from_user.id)
 
             await callback.message.edit_text(QUESTION_SUGGEST_GRATITUDE_MSG)
-            await callback.answer(reply_markup=MAIN_MENU_KBD)
+            await callback.answer(reply_markup=self.set_main_menu_kbd(callback.from_user.id))
         
         # /review || review_question button
         @self.router.message(Command("review"))
@@ -167,5 +159,14 @@ class BotHandler:
             response = LEVEL_ORIENTED_RESPONSE_MSG[level]
 
             await callback.message.edit_text(response)
-            await callback.message.answer(FIRST_LESSON_TAKE_OFFER_MSG, reply_markup=MAIN_MENU_KBD)
+            await callback.message.answer(FIRST_LESSON_TAKE_OFFER_MSG, reply_markup=self.set_main_menu_kbd(callback.from_user.id))
             await callback.answer()
+
+    def set_main_menu_kbd(self, telegram_id: int) -> ReplyKeyboardMarkup:
+        kbd = MAIN_MENU_KBD.model_copy(deep=True)
+
+        user = self.user_service.get_by_telegram_id(telegram_id)
+        if user.role == ADMIN:
+            add_reply_keyboard_button(kbd, question_review)
+        
+        return kbd
