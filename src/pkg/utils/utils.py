@@ -2,7 +2,7 @@ import hashlib
 import hmac
 import base64
 
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 from typing import List
 
 from config.config import Application
@@ -21,6 +21,12 @@ def create_inline_keyboard(texts: List[str], callback_data: List[str]) -> Inline
         keyboard.append([InlineKeyboardButton(text=texts[i], callback_data=callback_data[i])])
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+
+def add_reply_keyboard_button(kbd: ReplyKeyboardMarkup, txt: str) -> ReplyKeyboardMarkup:
+    print(kbd.keyboard)
+    kbd.keyboard.append([KeyboardButton(text=txt)])
+    print(kbd.keyboard)
 
 
 def generate_token(telegram_id: int, secret_key: str) -> str:

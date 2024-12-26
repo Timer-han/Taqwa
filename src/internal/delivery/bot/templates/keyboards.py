@@ -6,6 +6,7 @@ bot_help = "❓Как пользоваться"
 profile = "🏡Профиль"
 question_suggest = "📚Предложить вопрос"
 question_cancel = "Отменить вопрос"
+question_review = "✅Проверить вопросы других"
 
 MAIN_MENU_KBD = ReplyKeyboardMarkup(
     keyboard=[

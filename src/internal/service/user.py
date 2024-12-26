@@ -1,19 +1,28 @@
+from uuid import uuid4
+from datetime import datetime
+
 from internal.storage.user import UserRepository
 from internal.models.user import *
+from pkg.constants.roles import USER, ADMIN
 
 
 class UserService:
     def __init__(self, repository: UserRepository) -> None:
         self.repository = repository
 
-    def start_bot_using(self, user: User) -> StartBotUsingResponse:
+    # start_bot_using saving user and returns him and is he existed before
+    def start_bot_using(self, user: User):
         db_user = self.repository.user_by_telegram_id(user.telegram_id)
         if db_user is not None:
-            return StartBotUsingResponse(True)
+            return db_user, True
+
+        user.uuid = str(uuid4())
+        user.role = USER
+        user.created_at = datetime.now()
 
         self.repository.create_user(user)
 
-        return StartBotUsingResponse(False)
+        return user, False
 
     def set_knowledge_level(self, telegram_id: int, level: int):
         user = self.repository.user_by_telegram_id(telegram_id)

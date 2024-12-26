@@ -1,7 +1,6 @@
 from datetime import datetime
 import logging
 
-from uuid import uuid4
 from aiogram import Router, Bot
 from aiogram.types import Message
 from aiogram.types import CallbackQuery
@@ -39,16 +38,15 @@ class BotHandler:
         async def start_handler(message: Message):
             logging.info("starting")
             user = User(
-                uuid=str(uuid4()),
                 telegram_id=message.from_user.id,
                 telegram_username=message.from_user.username,
-                role=USER,
-                created_at=datetime.now()
             )
-            response = self.user_service.start_bot_using(user)
-
-            if response.is_user_exists:
-                await message.answer(START_HANDLER_RESPONSE_MSG, reply_markup=MAIN_MENU_KBD)
+            response, is_existed_before = self.user_service.start_bot_using(user)
+            if is_existed_before:
+                kbd = MAIN_MENU_KBD
+                if response.role == ADMIN:
+                    add_reply_keyboard_button(kbd, question_review)
+                await message.answer(START_HANDLER_RESPONSE_MSG, reply_markup=kbd)
             else:
                 # display buttons for determine level of knowledge
                 await message.answer(KNOWLEDGE_LEVEL_DETERMINE_MSG, reply_markup=KNOWLEDGE_LEVEL_DETERMINE_KBD)
@@ -124,6 +122,8 @@ class BotHandler:
 
             await state.update_data(answers=answers)
             await message.answer(txt, reply_markup=kbd)
+        
+        @self.router.message(Command("review"))
 
         # suggest_ selected
         @self.router.callback_query(F.data.startswith("suggest_"))
@@ -138,11 +138,9 @@ class BotHandler:
             question = await state.get_value("question")
             answers = await state.get_value("answers")
             suggest = Suggest(
-                uuid=str(uuid4()),
                 question=question,
                 answers=answers,
                 correct_id=int(correct_answer),
-                created_at=datetime.now(),
             )
             self.suggest_service.create_suggest(suggest, callback.from_user.id)
 

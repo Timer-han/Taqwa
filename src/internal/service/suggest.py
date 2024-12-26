@@ -1,4 +1,6 @@
 import logging
+from uuid import uuid4
+from datetime import datetime
 
 from internal.storage.suggest import SuggestRepository
 from internal.storage.user import UserRepository
@@ -17,7 +19,9 @@ class SuggestService:
         if user is None:
             logging.warning("no user with telegram_id: %s", telegram_id)
             return
-
+        
+        suggest.uuid = str(uuid4())
+        suggest.created_at = datetime.now()
         suggest.set_proposing_user(user)
         suggest.check_need_count = CHECK_NEED_MAP.get(user.role)
 
