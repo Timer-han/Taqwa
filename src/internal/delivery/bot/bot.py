@@ -19,10 +19,12 @@ from .templates.keyboards import *
 from .templates.states import *
 from pkg.constants.roles import *
 from pkg.utils.utils import *
+from config.config import Config
 
 
 class BotHandler:
-    def __init__(self, bot: Bot, user_svc: UserService, suggest_svc: SuggestService, question_svc: QuestionService):
+    def __init__(self, cfg: Config, bot: Bot, user_svc: UserService, suggest_svc: SuggestService, question_svc: QuestionService):
+        self.cfg = cfg
         self.bot = bot
         self.user_service = user_svc
         self.suggest_service = suggest_svc
@@ -77,7 +79,10 @@ class BotHandler:
         @self.router.message(Command("profile"))
         @self.router.message(F.text.contains(profile))
         async def get_profile(message: Message):
-            await message.answer("not implemented")
+            token = generate_token(message.from_user.id, self.cfg.app.secret_key)
+            url = self.cfg.other.dns_name + "?token=" + token
+
+            await message.answer(PROFILE_MSG+url, reply_markup=MAIN_MENU_KBD)
 
         # /suggest || question_suggest button
         @self.router.message(Command("suggest"))

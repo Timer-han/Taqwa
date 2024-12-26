@@ -24,7 +24,7 @@ cfg = load_config()
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -50,7 +50,7 @@ def setup_fastapi_routes():
     question_service = QuestionService(question_repository)
 
     # HTTP Handlers
-    question_handler = QuestionHTTPHandler(user_service, suggest_service, question_service)
+    question_handler = QuestionHTTPHandler(cfg, user_service, suggest_service, question_service)
 
     app.include_router(question_handler.router)
 
@@ -75,7 +75,7 @@ async def start_bot():
     bot = Bot(token=cfg.bot.api_token)
     dp = Dispatcher(storage=MemoryStorage())
 
-    bot_handlers = BotHandler(bot, user_service, suggest_service, question_service)
+    bot_handlers = BotHandler(cfg, bot, user_service, suggest_service, question_service)
     dp.include_router(bot_handlers.router)
 
     await bot.delete_webhook(drop_pending_updates=True)
@@ -107,6 +107,6 @@ if __name__ == "__main__":
             time.sleep(5)
 
 
-@app.get("/health")
-async def healthcheck():
-    return {"message": "success"}
+@app.get("/health/{id}")
+async def healthcheck(id: int):
+    return {"message": f"success with id: {id}"}

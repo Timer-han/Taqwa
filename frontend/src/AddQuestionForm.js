@@ -35,6 +35,13 @@ const AddQuestionForm = () => {
 
   // Обработка отправки формы
   const handleSubmit = async (e) => {
+    const token = getAuthToken();
+    if (!token) {
+      alert("Какие-то проблемы и мы не можем понять, кто ты. Можешь перейти по ссылке в боте еще раз?");
+      return;
+    }
+    console.log("Отправляем запрос с токеном: ", token)
+
     e.preventDefault();
 
     if (answers.length > 5 || answers.length < 2) {
@@ -50,7 +57,7 @@ const AddQuestionForm = () => {
     };
 
     console.log("Отправляем данные:", payload);
-    var uri = "/api/question/suggest";
+    var uri = "http://localhost:4000/question/suggest";
     console.log("uri: ", uri);
 
     try {
@@ -58,6 +65,7 @@ const AddQuestionForm = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
@@ -145,3 +153,27 @@ const AddQuestionForm = () => {
 };
 
 export default AddQuestionForm;
+
+const getAuthToken = () => {
+  const cookies = document.cookie.split("; ");
+  const tokenCookie = cookies.find((cookie) => cookie.startsWith("auth_token="));
+  if (tokenCookie) {
+    console.log("Токен перед отправкой: ", decodeURIComponent(tokenCookie.split("=")[1]))
+    return decodeURIComponent(tokenCookie.split("=")[1]); // Декодируем токен
+  } else {
+    return null;
+  }
+};
+
+const saveTokenFromURL = () => {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("token");
+  console.log("Токен перед сохранением: ", token)
+  if (token) {
+    document.cookie = `auth_token=${encodeURIComponent(token)}; Path=/; SameSite=Strict`;
+  }
+};
+
+if (new URLSearchParams(window.location.search).has("token")) {
+  saveTokenFromURL();
+}
