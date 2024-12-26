@@ -24,9 +24,7 @@ def create_inline_keyboard(texts: List[str], callback_data: List[str]) -> Inline
 
 
 def add_reply_keyboard_button(kbd: ReplyKeyboardMarkup, txt: str) -> ReplyKeyboardMarkup:
-    print(kbd.keyboard)
     kbd.keyboard.append([KeyboardButton(text=txt)])
-    print(kbd.keyboard)
 
 
 def generate_token(telegram_id: int, secret_key: str) -> str:

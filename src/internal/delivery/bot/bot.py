@@ -79,8 +79,13 @@ class BotHandler:
         async def get_profile(message: Message):
             token = generate_token(message.from_user.id, self.cfg.app.secret_key)
             url = self.cfg.other.dns_name + "?token=" + token
+            kbd = MAIN_MENU_KBD
 
-            await message.answer(PROFILE_MSG+url, reply_markup=MAIN_MENU_KBD)
+            user = self.user_service.get_by_telegram_id(message.from_user.id)
+            if user.role == ADMIN:
+                add_reply_keyboard_button(kbd, question_review)
+
+            await message.answer(PROFILE_MSG+url, reply_markup=kbd)
 
         # /suggest || question_suggest button
         @self.router.message(Command("suggest"))
@@ -122,8 +127,6 @@ class BotHandler:
 
             await state.update_data(answers=answers)
             await message.answer(txt, reply_markup=kbd)
-        
-        @self.router.message(Command("review"))
 
         # suggest_ selected
         @self.router.callback_query(F.data.startswith("suggest_"))
@@ -146,6 +149,12 @@ class BotHandler:
 
             await callback.message.edit_text(QUESTION_SUGGEST_GRATITUDE_MSG)
             await callback.answer(reply_markup=MAIN_MENU_KBD)
+        
+        # /review || review_question button
+        @self.router.message(Command("review"))
+        @self.router.message(F.text.contains(question_review))
+        async def handler_question_review(message: Message):
+            await message.answer("not implemented")
 
         # level_ selected
         @self.router.callback_query(F.data.startswith("level_"))

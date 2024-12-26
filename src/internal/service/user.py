@@ -30,3 +30,7 @@ class UserService:
         user.updated_at = datetime.now()
 
         self.repository.update_user(user)
+
+    def get_by_telegram_id(self, telegram_id: int) -> User:
+        return self.repository.user_by_telegram_id(telegram_id)
+    
