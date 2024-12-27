@@ -14,11 +14,15 @@ class SuggestRepository:
         self.collection.insert_one(suggest.dict(exclude_none=True))
 
     def get_for_review(self) -> Optional[Suggest]:
-        document = self.collection.find().sort({"created_at": -1}).limit(1)
-        if document is None:
+        documents = self.collection.find().sort({"created_at": -1}).limit(1)
+        if documents is None:
+            return None
+
+        if len(list(documents)) != 1:
+            logging.warning("there are not 1 value in suggestion for review: %s", len(list(documents)))
             return None
         
-        suggest_data = {field: document.get(field) for field in Suggest.__annotations__.keys()}
+        suggest_data = {field: documents.next().get(field) for field in Suggest.__annotations__.keys()}
         logging.info("getting suggest for review: %s", suggest_data)
         return Suggest(**suggest_data)
     
