@@ -146,7 +146,9 @@ class BotHandler:
         @self.router.message(Command("review"))
         @self.router.message(F.text.contains(question_review))
         async def handler_question_review(message: Message):
-            await message.answer("not implemented")
+            txt = self.suggest_service.get_text_for_review()
+
+            await message.answer(QUESITON_REVIEW_MSG+txt, reply_markup=QUESTION_REVIEW_KBD)
 
         # level_ selected
         @self.router.callback_query(F.data.startswith("level_"))

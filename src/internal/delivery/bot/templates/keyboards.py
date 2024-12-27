@@ -30,3 +30,11 @@ QUESTION_SUGGEST_KBD = ReplyKeyboardMarkup(
     keyboard=[[KeyboardButton(text=question_cancel)]],
     resize_keyboard=True,
 )
+
+QUESTION_REVIEW_KBD = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="Хороший вопрос", callback_data="review_good")],
+        [InlineKeyboardButton(text="Плохой вопрос", callback_data="review_bad")],
+        [InlineKeyboardButton(text="Хочу улучшить", callback_data="review_improve")],
+    ]
+)

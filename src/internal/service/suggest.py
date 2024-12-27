@@ -27,4 +27,12 @@ class SuggestService:
 
         self.suggest_repository.create(suggest)
 
-    # def set_correct_answer(self, answer_id: int):
+    def get_text_for_review(self) -> str:
+        suggest = self.suggest_repository.get_for_review()
+
+        txt = suggest.question + '\n\n'
+        for answer in suggest.answers:
+            txt += answer
+            txt += '\n'
+        
+        return txt
