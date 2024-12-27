@@ -20,9 +20,9 @@ class ProposingUser(BaseModel):
 
 
 class Suggest(BaseModel):
-    uuid: str
-    question: str
-    answers: List[str]
+    uuid: Optional[str] = None
+    question: Optional[str] = None
+    answers: Optional[List[str]] = None
     correct_id: Optional[int] = None  # id of correct answer
     proposing: Optional[ProposingUser] = None  # uuid of user, who suggested question
     difficulty: Optional[int] = None

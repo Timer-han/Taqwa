@@ -7,6 +7,9 @@ profile = "🏡Профиль"
 question_suggest = "📚Предложить вопрос"
 question_cancel = "Отменить вопрос"
 question_review = "✅Проверить вопросы других"
+good_review = "good"
+bad_review = "bad"
+improve_review = "improve"
 
 MAIN_MENU_KBD = ReplyKeyboardMarkup(
     keyboard=[
@@ -33,8 +36,8 @@ QUESTION_SUGGEST_KBD = ReplyKeyboardMarkup(
 
 QUESTION_REVIEW_KBD = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="Хороший вопрос", callback_data="review_good")],
-        [InlineKeyboardButton(text="Плохой вопрос", callback_data="review_bad")],
-        [InlineKeyboardButton(text="Хочу улучшить", callback_data="review_improve")],
+        [InlineKeyboardButton(text="Хороший вопрос", callback_data=f"review_{good_review}")],
+        [InlineKeyboardButton(text="Плохой вопрос", callback_data=f"review_{bad_review}")],
+        [InlineKeyboardButton(text="Я бы улучшил", callback_data=f"review_{improve_review}")],
     ]
 )

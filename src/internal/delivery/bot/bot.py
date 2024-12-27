@@ -137,6 +137,8 @@ class BotHandler:
                 answers=answers,
                 correct_id=int(correct_answer),
             )
+            await state.clear()
+            
             self.suggest_service.create_suggest(suggest, callback.from_user.id)
 
             await callback.message.edit_text(QUESTION_SUGGEST_GRATITUDE_MSG)
@@ -151,12 +153,30 @@ class BotHandler:
                 await message.answer(NO_QUESTIONS_FOR_REVIEW_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
                 return
 
-            txt = suggest.question + '\n\n'
-            for answer in suggest.answers:
-                txt += answer
-                txt += '\n'
+            txt = prepare_review_txt(suggest)
 
             await message.answer(QUESITON_REVIEW_MSG+txt, reply_markup=QUESTION_REVIEW_KBD, parse_mode='HTML')
+        
+        @self.router.callback_query(F.data.startswith("review_"))
+        async def handle_review_answer(callback: CallbackQuery, state: FSMContext):
+            answer = callback.data.split('_')[1]
+            if answer == good_review:
+                # TODO: save info to database
+                await callback.message.answer(GOOD_QUESTION_REVIEW_MSG, reply_markup=self.set_main_menu_kbd(callback.from_user.id))
+                await callback.answer()
+            elif answer == bad_review:
+                await callback.message.answer(BAD_QUESTION_REVIEW_MSG)
+                await state.set_state(SuggestReviewState.waiting_for_bad_question_comment)
+            elif answer == improve_review:
+                await callback.message.answer(IMPROVE_QUESTION_REVIEW_MSG)
+        
+
+        @self.router.message(SuggestQuestionState.waiting_for_question)
+        async def handle_bad_question_comment(message: Message, state: FSMContext):
+            # TODO: save info to database
+            await message.answer("not implement")
+            await state.clear()
+
 
         # level_ selected
         @self.router.callback_query(F.data.startswith("level_"))
@@ -180,3 +200,16 @@ class BotHandler:
             add_reply_keyboard_button(kbd, question_review)
         
         return kbd
+
+
+def prepare_review_txt(suggest: Suggest) -> str:
+    txt = f"<blockquote>{suggest.question}</blockquote>\n\n"
+    for i in range(0, len(suggest.answers)):
+        answer = suggest.answers[i]
+
+        if i == suggest.correct_id:
+            txt += f"✅{answer}\n"
+        else:
+            txt += f"❌{answer}\n"
+    
+    return txt

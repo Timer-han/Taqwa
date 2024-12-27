@@ -17,12 +17,13 @@ class SuggestRepository:
         documents = self.collection.find().sort({"created_at": -1}).limit(1)
         if documents is None:
             return None
-
-        if len(list(documents)) != 1:
+    
+        values = list(documents.clone())
+        if len(values) != 1:
             logging.warning("there are not 1 value in suggestion for review: %s", len(list(documents)))
             return None
         
-        suggest_data = {field: documents.next().get(field) for field in Suggest.__annotations__.keys()}
+        suggest_data = {field: values[0].get(field) for field in Suggest.__annotations__.keys()}
         logging.info("getting suggest for review: %s", suggest_data)
         return Suggest(**suggest_data)
     
