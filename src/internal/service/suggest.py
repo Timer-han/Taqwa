@@ -27,12 +27,5 @@ class SuggestService:
 
         self.suggest_repository.create(suggest)
 
-    def get_text_for_review(self) -> str:
-        suggest = self.suggest_repository.get_for_review()
-
-        txt = suggest.question + '\n\n'
-        for answer in suggest.answers:
-            txt += answer
-            txt += '\n'
-        
-        return txt
+    def get_question_for_review(self) -> Suggest:
+        return self.suggest_repository.get_for_review()

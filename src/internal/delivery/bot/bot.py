@@ -146,7 +146,15 @@ class BotHandler:
         @self.router.message(Command("review"))
         @self.router.message(F.text.contains(question_review))
         async def handler_question_review(message: Message):
-            txt = self.suggest_service.get_text_for_review()
+            suggest = self.suggest_service.get_question_for_review()
+            if suggest is None:
+                await message.answer(NO_QUESTIONS_FOR_REVIEW_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
+                return
+
+            txt = suggest.question + '\n\n'
+            for answer in suggest.answers:
+                txt += answer
+                txt += '\n'
 
             await message.answer(QUESITON_REVIEW_MSG+txt, reply_markup=QUESTION_REVIEW_KBD, parse_mode='HTML')
 
