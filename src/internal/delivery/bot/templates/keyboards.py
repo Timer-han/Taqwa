@@ -5,11 +5,12 @@ start_lesson = "📝Начать урок"
 bot_help = "❓Как пользоваться"
 profile = "🏡Профиль"
 question_suggest = "📚Предложить вопрос"
-question_cancel = "Отменить вопрос"
+cancel = "Отменить"
 question_review = "✅Проверить вопросы других"
 good_review = "good"
 bad_review = "bad"
 improve_review = "improve"
+dont_know_review = "dont-know"
 
 MAIN_MENU_KBD = ReplyKeyboardMarkup(
     keyboard=[
@@ -29,8 +30,8 @@ KNOWLEDGE_LEVEL_DETERMINE_KBD = InlineKeyboardMarkup(
     ]]
 )
 
-QUESTION_SUGGEST_KBD = ReplyKeyboardMarkup(
-    keyboard=[[KeyboardButton(text=question_cancel)]],
+CANCEL_KBD = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text=cancel)]],
     resize_keyboard=True,
 )
 
@@ -39,5 +40,6 @@ QUESTION_REVIEW_KBD = InlineKeyboardMarkup(
         [InlineKeyboardButton(text="Хороший вопрос", callback_data=f"review_{good_review}")],
         [InlineKeyboardButton(text="Плохой вопрос", callback_data=f"review_{bad_review}")],
         [InlineKeyboardButton(text="Я бы улучшил", callback_data=f"review_{improve_review}")],
+        [InlineKeyboardButton(text="Я не знаю", callback_data=f"review_{dont_know_review}")],
     ]
 )

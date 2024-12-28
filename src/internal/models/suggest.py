@@ -6,10 +6,16 @@ from .user import User as BaseUser
 
 
 class Check(BaseModel):
-    telegram_id: int
+    telegram_id: Optional[int] = None
     telegram_username: Optional[str] = None
     comment: Optional[str] = None
     checked_at: Optional[datetime] = None
+
+    # def __init__(self, user: BaseUser, comment: str):
+    #     self.telegram_id = user.telegram_id
+    #     self.telegram_username = user.telegram_username
+    #     self.comment = comment
+    #     self.checked_at = datetime.now()
 
 
 class ProposingUser(BaseModel):
@@ -29,6 +35,7 @@ class Suggest(BaseModel):
     check_need_count: Optional[int] = None
     marked_as_correct: Optional[List[Check]] = None  # correct checks
     marked_as_erroneous: Optional[List[Check]] = None  # error checks
+    marked_as_improve: Optional[List[Check]] = None  # improve checks
     created_at: Optional[datetime] = None
 
     def set_proposing_user(self, user: BaseUser):

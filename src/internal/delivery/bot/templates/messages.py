@@ -77,7 +77,7 @@ NO_QUESTIONS_FOR_REVIEW_MSG = (
     "Пока нет вопросов для проверки, но мы обязательно тебе сообщим, когда они появятся"
 )
 
-GOOD_QUESTION_REVIEW_MSG = (
+FINISH_QUESTION_REVIEW_MSG = (
     "Спасибо за выделенное время)"
 )
 
@@ -86,5 +86,5 @@ BAD_QUESTION_REVIEW_MSG = (
 )
 
 IMPROVE_QUESTION_REVIEW_MSG = (
-    "ОАОАОАОАОАОА"
+    "Можешь описать, как бы ты улучшил данный вопрос?"
 )

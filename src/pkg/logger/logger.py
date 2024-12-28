@@ -14,4 +14,4 @@ def set_uvicorn_logger():
             handler = logging.StreamHandler()
             handler.setFormatter(logging.Formatter(fmt=LOG_FORMAT, datefmt=LOG_DATE_FORMAT))
             uvicorn_logger.addHandler(handler)
-            uvicorn_logger.setLevel(LOG_LEVEL)
+            uvicorn_logger.setLevel(logging.INFO)
