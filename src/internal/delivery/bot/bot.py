@@ -231,7 +231,7 @@ class BotHandler:
         kbd = MAIN_MENU_KBD.model_copy(deep=True)
 
         user = self.user_service.get_by_telegram_id(telegram_id)
-        if user.role == ADMIN:
+        if user and user.role == ADMIN:
             add_reply_keyboard_button(kbd, question_review)
         
         return kbd
