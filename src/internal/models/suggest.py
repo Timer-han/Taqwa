@@ -11,11 +11,23 @@ class Check(BaseModel):
     comment: Optional[str] = None
     checked_at: Optional[datetime] = None
 
-    # def __init__(self, user: BaseUser, comment: str):
-    #     self.telegram_id = user.telegram_id
-    #     self.telegram_username = user.telegram_username
-    #     self.comment = comment
-    #     self.checked_at = datetime.now()
+    def __init__(
+            self, 
+            user: Optional[BaseUser] = None, 
+            telegram_id: Optional[int] = None,
+            telegram_username: Optional[str] = None,
+            comment: Optional[str] = None,
+            checked_at: Optional[datetime] = None
+        ):
+        super().__init__()
+        if user:
+            self.telegram_id = user.telegram_id if user.telegram_id else None
+            self.telegram_username = user.telegram_username if user.telegram_username else None
+        else:
+            self.telegram_id = telegram_id
+            self.telegram_username = telegram_username
+            self.comment = comment
+            self.checked_at = checked_at
 
 
 class ProposingUser(BaseModel):

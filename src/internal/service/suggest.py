@@ -5,9 +5,9 @@ from datetime import datetime
 from internal.storage.suggest import SuggestRepository
 from internal.storage.user import UserRepository
 from internal.models.suggest import Suggest, Check
+from internal.models.user import User
 from pkg.mappings.check_need import *
 from pkg.constants.constants import *
-
 
 class SuggestService:
     def __init__(self, suggest: SuggestRepository, user: UserRepository):
@@ -16,7 +16,7 @@ class SuggestService:
 
     def create_suggest(self, suggest: Suggest, telegram_id: int):
         user = self.user_repository.user_by_telegram_id(telegram_id)
-        if user is None:
+        if user is None or user.role == NOBODY:
             logging.warning("no user with telegram_id: %s", telegram_id)
             return
         
@@ -27,8 +27,8 @@ class SuggestService:
 
         self.suggest_repository.create(suggest)
 
-    def get_question_for_review(self) -> Suggest:
-        return self.suggest_repository.get_for_review()
+    def get_question_for_review(self, user: User) -> Suggest:
+        return self.suggest_repository.get_for_review(user)
     
     def mark_as_correct(self, suggest_uuid: str, telegram_id: int):
         user = self.user_repository.user_by_telegram_id(telegram_id)

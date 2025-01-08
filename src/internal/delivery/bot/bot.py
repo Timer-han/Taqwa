@@ -148,7 +148,14 @@ class BotHandler:
         @self.router.message(Command("review"))
         @self.router.message(F.text.contains(question_review))
         async def handler_question_review(message: Message, state: FSMContext):
-            suggest = self.suggest_service.get_question_for_review()
+
+            # admin check
+            if self.user_service.get_by_telegram_id(message.from_user.id).role != ADMIN:
+                await message.answer(GET_ADMIN_RIGHTS, reply_markup=self.set_main_menu_kbd(message.from_user.id))
+                return
+
+            user = self.user_service.get_by_telegram_id(message.from_user.id)
+            suggest = self.suggest_service.get_question_for_review(user)
             if suggest is None:
                 await message.answer(NO_QUESTIONS_FOR_REVIEW_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
                 return

@@ -88,3 +88,7 @@ BAD_QUESTION_REVIEW_MSG = (
 IMPROVE_QUESTION_REVIEW_MSG = (
     "Можешь описать, как бы ты улучшил данный вопрос?"
 )
+
+GET_ADMIN_RIGHTS = (
+    "Хитрец, вначале получи права администратора)\n"
+)

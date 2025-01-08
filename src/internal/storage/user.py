@@ -2,6 +2,7 @@ from .mongo import MongoDatabase
 from typing import Optional
 import logging
 
+from pkg.constants.roles import *
 from internal.models.user import User
 
 
@@ -16,7 +17,7 @@ class UserRepository:
     def user_by_telegram_id(self, telegram_id: int) -> Optional[User]:
         document = self.collection.find_one({telegram_id_column: telegram_id})
         if document is None:
-            return None
+            return User(role=NOBODY)
 
         user_data = {field: document.get(field) for field in User.__annotations__.keys()}
         logging.info("getting_user: %s", user_data)
