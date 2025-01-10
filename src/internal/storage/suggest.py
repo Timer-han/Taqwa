@@ -1,5 +1,5 @@
 from .mongo import MongoDatabase
-from typing import Optional
+from typing import Optional, List
 import logging
 
 from internal.models.suggest import Suggest
@@ -13,6 +13,21 @@ class SuggestRepository:
     def create(self, suggest: Suggest):
         logging.info("creating suggest question: %s", suggest.dict(exclude_none=True))
         self.collection.insert_one(suggest.dict(exclude_none=True))
+    
+    def get_all(self) -> Optional[List[Suggest]]:
+        documents = self.collection.find({})
+        if documents is None:
+            return None
+        
+        # logging.info("getting %s suggests", len(documents))
+        suggests = []
+        
+        for value in documents:
+            suggest = {field: value.get(field) for field in Suggest.__annotations__.keys()}
+            logging.info("getting suggest: %s", suggest)
+            suggests.append(Suggest(**suggest))
+        
+        return suggests
     
     def get_by_uuid(self, uuid: str):
         document = self.collection.find({"uuid": uuid})

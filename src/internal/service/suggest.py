@@ -1,6 +1,7 @@
 import logging
 from uuid import uuid4
 from datetime import datetime
+from typing import List
 
 from internal.storage.suggest import SuggestRepository
 from internal.storage.user import UserRepository
@@ -26,6 +27,9 @@ class SuggestService:
         suggest.check_need_count = CHECK_NEED_MAP.get(user.role)
 
         self.suggest_repository.create(suggest)
+
+    def get_all(self) -> List[Suggest]:
+        return self.suggest_repository.get_all()
 
     def get_question_for_review(self, user: User) -> Suggest:
         return self.suggest_repository.get_for_review(user)

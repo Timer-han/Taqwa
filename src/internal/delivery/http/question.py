@@ -48,3 +48,11 @@ class QuestionHTTPHandler:
             self.suggest_service.create_suggest(suggest, user_telegram_id)
 
             return {"message": "saved question"}
+        
+        @self.router.get("/suggests")
+        async def get_suggests():
+            suggests = self.suggest_service.get_all()
+            if suggests is None:
+                return {"message": "no questions"}
+            
+            return {"suggests": suggests}
