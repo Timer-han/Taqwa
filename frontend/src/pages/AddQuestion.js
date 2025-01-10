@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./App.css"; // Стили (опционально)
+import "../css/AddQuestion.css";
 
-const AddQuestionForm = () => {
+const AddQuestion = () => {
   const [question, setQuestion] = useState(""); // Поле для вопроса
   const [answers, setAnswers] = useState(["", "", "", ""]); // Массив с вариантами ответа
   const [correctAnswer, setCorrectAnswer] = useState(""); // Верный ответ
@@ -152,8 +152,6 @@ const AddQuestionForm = () => {
   );
 };
 
-export default AddQuestionForm;
-
 const getAuthToken = () => {
   const cookies = document.cookie.split("; ");
   const tokenCookie = cookies.find((cookie) => cookie.startsWith("auth_token="));
@@ -177,3 +175,5 @@ const saveTokenFromURL = () => {
 if (new URLSearchParams(window.location.search).has("token")) {
   saveTokenFromURL();
 }
+
+export default AddQuestion;

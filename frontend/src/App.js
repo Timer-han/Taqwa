@@ -1,11 +1,20 @@
 import React from "react";
-import AddQuestionForm from "./AddQuestionForm";
+import { Routes, Route } from "react-router-dom";
+import NavBar from "./components/NavBar"
+import AddQuestion from "./pages/AddQuestion";
+import Review from "./pages/Review"
 
 function App() {
   return (
-    <div>
-      <AddQuestionForm />
-    </div>
+    <>
+      <NavBar />
+      <main>
+        <Routes>
+          <Route path="/" element={<AddQuestion />} />
+          <Route path="/review" element={<Review />} />
+        </Routes>
+      </main>
+    </>
   );
 }
 
