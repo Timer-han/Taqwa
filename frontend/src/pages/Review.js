@@ -1,4 +1,7 @@
 import { React, useState, useEffect } from "react";
+import { getSuggests } from "../services/api";
+import SuggestCard from "../components/SuggestCard";
+import "../css/Review.css"
 
 const Review = () => {
     const [suggests, setSuggests] = useState([]);
@@ -29,7 +32,7 @@ const Review = () => {
         ) : (
           <div className="suggests-grid">
             {suggests.map((suggest) => (
-              <SuggestCard suggest={suggest} key={suggest.id} />
+              <SuggestCard suggest={suggest} key={suggest.uuid} />
             ))}
           </div>
         )}

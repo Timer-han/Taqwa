@@ -20,7 +20,7 @@ const AddQuestion = () => {
 
   // Добавляем новый ответ
   const addAnswer = () => {
-    if (answers.length == 5) {
+    if (answers.length === 5) {
       alert("У вопроса не может быть больше 5 ответов((")
       return
     }

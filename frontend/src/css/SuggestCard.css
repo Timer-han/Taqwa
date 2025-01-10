@@ -1,0 +1,39 @@
+.suggest-card {
+    position: relative;
+    border: 3px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    /* background-color: #696969; */
+    transition: transform 0.2s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .suggest-card:hover {
+    transform: translateY(-5px);
+    background-color: #ededed;
+  }
+  
+  .suggest-info {
+    padding-top: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .suggest-info h3 {
+    font-size: 1rem;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .suggest-info p {
+    color: #2c2c2c;
+    font-size: 0.9rem;
+    margin: 0.2rem;
+    margin-left: auto;
+    margin-right: auto;
+  }

@@ -1,0 +1,14 @@
+.review {
+    padding: 2rem 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .suggests-grid {
+    display: grid;
+    grid-template-rows: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
