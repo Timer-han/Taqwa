@@ -63,7 +63,7 @@ const AddQuestion = () => {
     };
 
     console.log("Отправляем данные:", payload);
-    var uri = "http://localhost:4000/question/suggest";
+    var uri = "/api/question/suggest";
     console.log("uri: ", uri);
 
     try {

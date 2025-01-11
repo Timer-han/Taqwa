@@ -1,5 +1,5 @@
 export const getSuggests = async () => {
-    const uri = "http://localhost:4000/question/suggests";
+    const uri = "/api/question/suggests";
     console.log("uri: ", uri);
 
     const response = await fetch(uri);
@@ -18,7 +18,7 @@ export const getSuggests = async () => {
 };
 
 export const getSuggest = async (uuid) => {
-    const uri = "http://localhost:4000/question/suggest?uuid=" + uuid;
+    const uri = "/api/question/suggest?uuid=" + uuid;
     console.log("uri: ", uri);
 
     const response = await fetch(uri);
