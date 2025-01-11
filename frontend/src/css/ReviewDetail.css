@@ -5,3 +5,12 @@
     width: 100%;
     box-sizing: border-box;
 }
+
+@media (max-width: 768px) {
+    .answers-grid {
+        display: grid;
+        grid-template-columns: none;
+        grid-template-rows: repeat(auto-fit, 1fr);
+        height: 100%;
+    }
+}
