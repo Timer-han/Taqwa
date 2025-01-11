@@ -1,5 +1,5 @@
 import "../css/SuggestCard.css"
-// import { useMovieContext } from "../contexts/MovieContext"
+import AnswerCard from "./AnswerCard";
 
 function SuggestCard({suggest}) {
     return <div className="suggest-card">
@@ -9,14 +9,10 @@ function SuggestCard({suggest}) {
         </div>
         <div className="suggest-info">
             <h3>{suggest.question}</h3>
-            {/* <p>{suggest.answers}</p> */}
-            {suggest.answers.map((answer) => (
-                <p>{answer}</p>
+            {suggest.answers.map((answer, index) => (
+                <AnswerCard suggest={suggest} answer={answer} index={index} />
             ))}
         </div>
-        {/* {suggests.map((suggest) => (
-                      <SuggestCard suggest={suggest} key={suggest.uuid} />
-                    ))} */}
     </div>
 }
 
