@@ -129,20 +129,48 @@ class BotHandler:
             if not correct_answer.isnumeric():
                 await callback.answer("Что-то тут не так, если не получается решить проблему, напиши нам)")
                 return
+            
+            await state.update_data(correct_id=int(correct_answer))
+            await callback.message.edit_text(DESCRIPTION_NEED_MSG, parse_mode='HTML')
+            await state.set_state(SuggestQuestionState.waiting_for_description)
 
+            # question = await state.get_value("question")
+            # answers = await state.get_value("answers")
+            # suggest = Suggest(
+            #     question=question,
+            #     answers=answers,
+            #     correct_id=int(correct_answer),
+            # )
+            # await state.clear()
+            
+            # self.suggest_service.create_suggest(suggest, callback.from_user.id)
+
+            # await callback.message.edit_text(QUESTION_SUGGEST_GRATITUDE_MSG)
+            # await callback.answer(reply_markup=self.set_main_menu_kbd(callback.from_user.id))
+        
+        @self.router.message(SuggestQuestionState.waiting_for_description)
+        async def receive_answers(message: Message, state: FSMContext):
+            if message.text == cancel:
+                logging.info("sent cancel question message")
+                await state.clear()
+                await message.answer(QUESTION_CANCEL_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
+                return
+            
+            logging.info("receive description: %s", message.text)
             question = await state.get_value("question")
             answers = await state.get_value("answers")
+            correct_id = await state.get_value("correct_id")
             suggest = Suggest(
                 question=question,
                 answers=answers,
-                correct_id=int(correct_answer),
+                correct_id=correct_id,
+                description=message.text,
             )
-            await state.clear()
             
-            self.suggest_service.create_suggest(suggest, callback.from_user.id)
+            self.suggest_service.create_suggest(suggest, message.from_user.id)
 
-            await callback.message.edit_text(QUESTION_SUGGEST_GRATITUDE_MSG)
-            await callback.answer(reply_markup=self.set_main_menu_kbd(callback.from_user.id))
+            await state.clear()
+            await message.answer(QUESTION_SUGGEST_GRATITUDE_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
         
         # /review || review_question button
         @self.router.message(Command("review"))

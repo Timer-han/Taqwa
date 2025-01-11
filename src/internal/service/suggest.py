@@ -30,6 +30,9 @@ class SuggestService:
 
     def get_all(self) -> List[Suggest]:
         return self.suggest_repository.get_all()
+    
+    def get_by_uuid(self, uuid: str) -> Suggest:
+        return self.suggest_repository.get_by_uuid(uuid)
 
     def get_question_for_review(self, user: User) -> Suggest:
         return self.suggest_repository.get_for_review(user)

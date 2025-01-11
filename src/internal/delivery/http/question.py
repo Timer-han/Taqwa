@@ -1,9 +1,9 @@
 import logging
 
-from fastapi import APIRouter, Header
+from fastapi import APIRouter, Header, Request, HTTPException
 from datetime import datetime
 
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 from internal.service.user import UserService
 from internal.service.suggest import SuggestService
@@ -57,3 +57,22 @@ class QuestionHTTPHandler:
                 return {"message": "no questions"}
             
             return {"suggests": suggests}
+        
+        @self.router.get("/suggest")
+        async def get_suggest_by_uuid(request: Request):
+            suggest_uuid = request.query_params.get("uuid")
+            logging.info("getting suggest by uuid: %s", suggest_uuid)
+
+            if not suggest_uuid:
+                raise HTTPException(status_code=400, detail="UUID параметр обязателен")
+            
+            try:
+                uuid_obj = UUID(suggest_uuid)
+            except ValueError:
+                raise HTTPException(status_code=400, detail="Некорректный UUID")
+            
+            suggest = self.suggest_service.get_by_uuid(suggest_uuid)
+            if not suggest:
+                raise HTTPException(status_code=404, detail="Вопрос не найден")
+            
+            return {"suggest": suggest}

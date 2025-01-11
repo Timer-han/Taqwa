@@ -1,0 +1,16 @@
+p {
+    margin: 0.3rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.answer-correct {
+    /* color: #4eff3b; */
+    border: 2px solid #116202;
+    background-color: #86ff78;
+}
+
+.answer-wrong {
+    border: 2px solid #620202;
+    background-color: #fdb2b2;
+}

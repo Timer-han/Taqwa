@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { getSuggests } from "../services/api";
 import SuggestCard from "../components/SuggestCard";
 import "../css/Review.css"
@@ -15,7 +16,7 @@ const Review = () => {
                 setSuggests(suggests);
             } catch (err) {
                 console.log(err);
-                setError("Failed to find suggests...")
+                setError("Ошибка загрузки, обратись в поддержку")
             } finally {
                 setLoading(false);
             }
@@ -32,7 +33,9 @@ const Review = () => {
         ) : (
           <div className="suggests-grid">
             {suggests.map((suggest) => (
-              <SuggestCard suggest={suggest} key={suggest.uuid} />
+              <Link className="suggests-link" to={`/review/${suggest.uuid}`}>
+                <SuggestCard suggest={suggest} key={suggest.uuid} />
+              </Link>
             ))}
           </div>
         )}
