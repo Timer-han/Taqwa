@@ -42,6 +42,7 @@ class Suggest(BaseModel):
     question: Optional[str] = None
     answers: Optional[List[str]] = None
     correct_id: Optional[int] = None  # id of correct answer
+    description: Optional[str] = None
     proposing: Optional[ProposingUser] = None  # uuid of user, who suggested question
     difficulty: Optional[int] = None
     check_need_count: Optional[int] = None
@@ -63,3 +64,4 @@ class SuggestRequest(BaseModel):
     question: Optional[str] = None
     answers: Optional[List[str]] = None
     correctAnswer: Optional[str] = None
+    description: Optional[str] = None

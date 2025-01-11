@@ -43,6 +43,7 @@ class QuestionHTTPHandler:
                 question=request.question,
                 answers=request.answers,
                 correct_id=request.correctAnswer,
+                description=request.description,
                 created_at=datetime.now(),
             )
             self.suggest_service.create_suggest(suggest, user_telegram_id)

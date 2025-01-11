@@ -5,6 +5,7 @@ const AddQuestion = () => {
   const [question, setQuestion] = useState(""); // Поле для вопроса
   const [answers, setAnswers] = useState(["", "", "", ""]); // Массив с вариантами ответа
   const [correctAnswer, setCorrectAnswer] = useState(""); // Верный ответ
+  const [description, setDescription] = useState("");
 
   // Обновляем значение вопроса
   const handleQuestionChange = (e) => {
@@ -33,6 +34,10 @@ const AddQuestion = () => {
     setAnswers(updatedAnswers);
   };
 
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
   // Обработка отправки формы
   const handleSubmit = async (e) => {
     const token = getAuthToken();
@@ -54,10 +59,11 @@ const AddQuestion = () => {
       question,
       answers,
       correctAnswer,
+      description,
     };
 
     console.log("Отправляем данные:", payload);
-    var uri = "api/question/suggest";
+    var uri = "http://localhost:4000/question/suggest";
     console.log("uri: ", uri);
 
     try {
@@ -75,6 +81,7 @@ const AddQuestion = () => {
         setQuestion("");
         setAnswers(["", "", "", ""]);
         setCorrectAnswer("");
+        setDescription("");
       } else {
         alert("Ошибка при добавлении вопроса.");
       }
@@ -143,6 +150,17 @@ const AddQuestion = () => {
               </option>
             ))}
           </select>
+        </div>
+
+        {/* Описание */}
+        <div>
+          <label>Описание:</label>
+          <input 
+            type="text"
+            value={description}
+            onChange={handleDescriptionChange}
+            placeholder="Пояснение к вопросу, если пользователь ответит неверно"
+          />
         </div>
 
         {/* Кнопка отправки */}
