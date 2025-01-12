@@ -8,9 +8,10 @@ from uuid import uuid4, UUID
 from internal.service.user import UserService
 from internal.service.suggest import SuggestService
 from internal.service.question import QuestionService
-from internal.models.suggest import Suggest, SuggestRequest
+from internal.models.suggest import Suggest, SuggestRequest, SuggestReview
 from config.config import Config
 from pkg.constants.constants import *
+from pkg.constants.review import *
 from pkg.utils.utils import *
 
 
@@ -26,24 +27,17 @@ class QuestionHTTPHandler:
 
     def register_handlers(self):
         @self.router.post("/suggest")
-        async def suggest_handler(request: SuggestRequest, authorization: str = Header(None)):
-            logging.info("suggest_handler: %s", request)
-            logging.info("auth token: %s", authorization.split(" ")[1])
-
-            user_telegram_id = DEFAULT_TELEGRAM_ID  # Значение по умолчанию
-            try:
-                user_telegram_id = verify_token(authorization.split(" ")[1], self.cfg.app.secret_key)
-            except ValueError as e:
-                logging.error("user with non verified token is suggested question")
-            
-            logging.info("telegram_id, that suggesting question: %s", user_telegram_id)
+        async def suggest_handler(request: Request, body: SuggestRequest, authorization: str = Header(None)):
+            user_telegram_id = int(getattr(request.state, "telegram_id"))
+            if not user_telegram_id:
+                return {"error": "Unauthorized access"}
 
             suggest = Suggest(
                 uuid=str(uuid4()),
-                question=request.question,
-                answers=request.answers,
-                correct_id=request.correctAnswer,
-                description=request.description,
+                question=body.question,
+                answers=body.answers,
+                correct_id=body.correctAnswer,
+                description=body.description,
                 created_at=datetime.now(),
             )
             self.suggest_service.create_suggest(suggest, user_telegram_id)
@@ -76,3 +70,19 @@ class QuestionHTTPHandler:
                 raise HTTPException(status_code=404, detail="Вопрос не найден")
             
             return {"suggest": suggest}
+    
+        @self.router.post("/suggest/review")
+        async def review(request: Request, body: SuggestReview):
+            user_telegram_id = int(getattr(request.state, "telegram_id"))
+            if not user_telegram_id:
+                return {"error": "Unauthorized access"}
+
+            suggest_uuid = request.query_params.get("uuid")
+            logging.info("suggest_review_handler: %s", body)
+
+            if body.type == GOOD_BUTTON:
+                self.suggest_service.mark_as_correct(suggest_uuid, user_telegram_id)
+            elif body.type == BAD_BUTTON:
+                self.suggest_service.mark_as_bad(suggest_uuid, body.comment, user_telegram_id)
+            elif body.type == IMPROVE_BUTTON:
+                self.suggest_service.mark_as_improve(suggest_uuid, body.comment, user_telegram_id)

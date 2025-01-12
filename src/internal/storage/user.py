@@ -15,7 +15,9 @@ class UserRepository:
         self.collection = db.get_collection("users")
 
     def user_by_telegram_id(self, telegram_id: int) -> Optional[User]:
+        logging.info("telegram_id: '%s'", telegram_id)
         document = self.collection.find_one({telegram_id_column: telegram_id})
+        logging.info("user: %s", document)
         if document is None:
             return User(role=NOBODY)
 

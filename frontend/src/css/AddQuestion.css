@@ -9,25 +9,34 @@
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
+.question-add {
   text-align: center;
 }
 
-label {
+.question-label,
+.answers-label,
+.correct-label,
+.description-label {
   display: block;
   margin: 10px 0 5px;
 }
 
-input,
-select,
-button {
+.question-input,
+.answers-input,
+.description-input,
+.correct-select,
+.remove-button,
+.add-button,
+.send-button {
   padding: 8px;
   margin-bottom: 10px;
   width: 100%;
   box-sizing: border-box;
 }
 
-button {
+.remove-button,
+.add-button,
+.send-button {
   background-color: #007bff;
   color: white;
   border: none;
@@ -35,6 +44,8 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.remove-button:hover,
+.add-button:hover,
+.send-button:hover {
   background-color: #0056b3;
 }

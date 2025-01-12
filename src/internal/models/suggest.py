@@ -65,3 +65,8 @@ class SuggestRequest(BaseModel):
     answers: Optional[List[str]] = None
     correctAnswer: Optional[str] = None
     description: Optional[str] = None
+
+class SuggestReview(BaseModel):
+    type: Optional[str] = None
+    comment: Optional[str] = None
+    

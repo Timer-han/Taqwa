@@ -14,7 +14,7 @@
   }
 
   .suggests-link {
-    text-decoration: none; /* Убираем подчеркивание */
-    color: inherit; /* Используем цвет текста из окружения */
+    text-decoration: none;
+    color: inherit;
   }
   

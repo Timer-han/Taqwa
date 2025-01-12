@@ -1,5 +1,6 @@
 import { React, useState } from "react";
 import "../css/AddQuestion.css";
+import { addQuestion } from "../services/api";
 
 const AddQuestion = () => {
   const [question, setQuestion] = useState(""); // Поле для вопроса
@@ -38,78 +39,42 @@ const AddQuestion = () => {
     setDescription(e.target.value);
   };
 
-  // Обработка отправки формы
   const handleSubmit = async (e) => {
-    const token = getAuthToken();
-    if (!token) {
-      alert("Какие-то проблемы и мы не можем понять, кто ты. Можешь перейти по ссылке в боте еще раз?");
-      return;
-    }
-    console.log("Отправляем запрос с токеном: ", token)
-
     e.preventDefault();
 
-    if (answers.length > 5 || answers.length < 2) {
-      console.log("Некорректное число ответов: ", answers.length);
-      alert("Количество ответов должно быть от 2 до 5")
-      return
-    }
-    
-    const payload = {
-      question,
-      answers,
-      correctAnswer,
-      description,
-    };
-
-    console.log("Отправляем данные:", payload);
-    var uri = "/api/question/suggest";
-    console.log("uri: ", uri);
-
     try {
-      const response = await fetch(uri, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        alert("Вопрос успешно добавлен!");
-        setQuestion("");
-        setAnswers(["", "", "", ""]);
-        setCorrectAnswer("");
-        setDescription("");
-      } else {
-        alert("Ошибка при добавлении вопроса.");
-      }
+      await addQuestion(question, answers, correctAnswer, description);
     } catch (error) {
-      console.error("Ошибка сети:", error);
-      alert("Ошибка сети.");
+      console.log("Ошибка: ", error)
+      alert("Ошибка, попробуйте снова:", error)
+    } finally {
+      alert("Вопрос успешно добавлен!");
+      setQuestion("");
+      setAnswers(["", "", "", ""]);
+      setCorrectAnswer("");
+      setDescription("");
     }
   };
 
   return (
     <div className="form-container">
-      <h2>Добавить новый вопрос</h2>
+      <h2 className="question-add">Добавить новый вопрос</h2>
       <form onSubmit={handleSubmit}>
-        {/* Поле для вопроса */}
         <div>
-          <label>Вопрос:</label>
+          <label className="question-label">Вопрос:</label>
           <input
             type="text"
             value={question}
             onChange={handleQuestionChange}
             placeholder="Введите ваш вопрос"
             required
+            className="question-input"
           />
         </div>
 
         {/* Поля для ответов */}
         <div>
-          <label>Варианты ответов:</label>
+          <label className="answers-label">Варианты ответов:</label>
           {answers.map((answer, index) => (
             <div key={index} style={{ display: "flex", marginBottom: "5px" }}>
               <input
@@ -118,28 +83,31 @@ const AddQuestion = () => {
                 onChange={(e) => handleAnswerChange(index, e.target.value)}
                 placeholder={`Ответ ${index + 1}`}
                 required
+                className="answers-input"
               />
               <button
                 type="button"
                 onClick={() => removeAnswer(index)}
                 style={{ marginLeft: "5px" }}
+                className="remove-button"
               >
                 Удалить
               </button>
             </div>
           ))}
-          <button type="button" onClick={addAnswer}>
+          <button type="button" onClick={addAnswer} className="add-button">
             Добавить ответ
           </button>
         </div>
 
         {/* Выбор правильного ответа */}
         <div>
-          <label>Верный ответ:</label>
+          <label className="correct-label">Верный ответ:</label>
           <select
             value={correctAnswer}
             onChange={(e) => setCorrectAnswer(e.target.value)}
             required
+            className="correct-select"
           >
             <option value="" disabled>
               Выберите верный ответ
@@ -154,31 +122,21 @@ const AddQuestion = () => {
 
         {/* Описание */}
         <div>
-          <label>Описание:</label>
+          <label className="description-label">Описание:</label>
           <input 
             type="text"
             value={description}
             onChange={handleDescriptionChange}
             placeholder="Пояснение к вопросу, если пользователь ответит неверно"
+            className="description-input"
           />
         </div>
 
         {/* Кнопка отправки */}
-        <button type="submit">Добавить вопрос</button>
+        <button type="submit" className="send-button">Добавить вопрос</button>
       </form>
     </div>
   );
-};
-
-const getAuthToken = () => {
-  const cookies = document.cookie.split("; ");
-  const tokenCookie = cookies.find((cookie) => cookie.startsWith("auth_token="));
-  if (tokenCookie) {
-    console.log("Токен перед отправкой: ", decodeURIComponent(tokenCookie.split("=")[1]))
-    return decodeURIComponent(tokenCookie.split("=")[1]); // Декодируем токен
-  } else {
-    return null;
-  }
 };
 
 const saveTokenFromURL = () => {

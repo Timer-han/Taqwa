@@ -1,0 +1,87 @@
+.feedback-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.feedback-buttons button.selected {
+    transform: translateY(-2px);
+    border: 3px solid #000;
+    border-radius: 10px;
+}
+
+.button-good {
+    background-color: #32fc68;
+    border: 2px solid #00691c;
+    border-radius: 4px;
+}
+
+.button-bad {
+    background-color: #fb6262;
+    border: 2px solid #881d1d;
+    border-radius: 4px;
+}
+
+.button-improve {
+    background-color: #ffd876;
+    border: 2px solid #916800;
+    border-radius: 4px;
+}
+
+.feedback-buttons button:hover {
+    transform: translateY(-3px);
+}
+
+.feedback-comment {
+    margin-top: 10px;
+    margin-right: 0.8rem;
+    /* padding-left: 0; */
+    margin-left: 0.4rem;
+}
+
+.feedback-comment textarea {
+    width: 100%;
+    min-height: 1rem;
+    padding: 10px;
+    font-size: 0.8rem;
+    border: 1px solid #b0afaf;
+    border-radius: 4px;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.feedback-comment textarea:focus {
+    border-color: #54a7ff;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+.feedback-comment button {
+    display: block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #00c3fe;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  .feedback-comment button:hover {
+    background-color: #006bdd;
+  }
+
+@media (max-width: 768px) {
+    .feedback-buttons {
+        display: grid;
+        grid-template-columns: none;
+        grid-template-rows: repeat(auto-fit, minmax(5px, 1fr));
+        height: 9rem;
+    }
+}

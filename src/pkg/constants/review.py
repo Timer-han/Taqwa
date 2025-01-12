@@ -1,0 +1,3 @@
+GOOD_BUTTON="good"
+BAD_BUTTON="bad"
+IMPROVE_BUTTON="improve"

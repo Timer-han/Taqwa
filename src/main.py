@@ -17,11 +17,13 @@ from internal.service.suggest import SuggestService
 from internal.service.question import QuestionService
 from internal.delivery.bot.bot import BotHandler
 from internal.delivery.http.question import QuestionHTTPHandler
+from internal.middleware.auth import AuthMiddleware
 from config.config import load_config
 from pkg.logger.logger import *
 
 cfg = load_config()
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -29,6 +31,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(AuthMiddleware, secret_key=cfg.app.secret_key)
 logging.basicConfig(
     format=LOG_FORMAT,
     datefmt=LOG_DATE_FORMAT,

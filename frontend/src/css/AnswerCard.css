@@ -7,10 +7,10 @@ p {
 .answer-correct {
     /* color: #4eff3b; */
     border: 2px solid #116202;
-    background-color: #b5fead;
+    background-color: #cefdc9;
 }
 
 .answer-wrong {
     border: 2px solid #620202;
-    background-color: #ffd9d9;
+    background-color: #ffe6e6;
 }
