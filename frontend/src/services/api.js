@@ -1,4 +1,5 @@
 const url = "api/"
+// const url = "http://localhost:4000/"
 
 export const addQuestion = async (question, answers, correctAnswer, description) => {
     const token = getAuthToken();
@@ -139,6 +140,27 @@ const getAuthToken = () => {
     if (tokenCookie) {
       return decodeURIComponent(tokenCookie.split("=")[1]); // Декодируем токен
     } else {
+      return null;
+    }
+  };
+
+export const parseAuthToken = () => {
+    try {
+        const token = getAuthToken()
+
+      const decoded = atob(token.replace(/_/g, "/").replace(/-/g, "+")); // Преобразуем URL-safe Base64 в обычный Base64
+  
+      // Разделение токена на telegram_id и signature
+      const [telegram_id, signature] = decoded.split(".");
+  
+      // Проверяем, что в токене есть telegram_id и signature
+      if (!telegram_id || !signature) {
+        throw new Error("Invalid token format");
+      }
+  
+      return telegram_id;
+    } catch (error) {
+      console.error("Failed to parse token:", error.message);
       return null;
     }
   };
