@@ -10,7 +10,6 @@ const Feedback = (uuid) => {
 
     const handleSubmitFeedback = async (type, commentText = "") => {
         try {
-            console.log("feedback and comment: ", type, commentText)
             await sendFeedback(type, uuid, commentText);
         } catch (error) {
             console.log("Ошибка: ", error)
@@ -24,8 +23,7 @@ const Feedback = (uuid) => {
     }
 
     const handleFeedbackClick = (type) => {
-        console.log("type:", type)
-        setFeedbackType("good");
+        setFeedbackType(type);
         if (type === "good") {
             handleSubmitFeedback(type);
         }
@@ -48,6 +46,7 @@ const Feedback = (uuid) => {
                 className={`button-improve ${feedbackType === "improve" ? "selected" : ""}`}
             >Я бы улучшил</button>
         </div>
+
         <div className="feedback-comment">
         {(feedbackType === "bad" || feedbackType === "improve") && (
             <div className="feedback-comment">
@@ -56,7 +55,7 @@ const Feedback = (uuid) => {
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Напишите свой комментарий..."
             />
-            <button onClick={handleSubmitFeedback(feedbackType, comment)}>Отправить</button>
+            <button onClick={() => handleSubmitFeedback(feedbackType, comment)}>Отправить</button>
             </div>
         )}
         </div>

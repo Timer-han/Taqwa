@@ -32,6 +32,13 @@ class SuggestService:
         return self.suggest_repository.get_all()
     
     def get_all_for_review(self, telegram_id: int) -> List[Suggest]:
+        user = self.user_repository.user_by_telegram_id(telegram_id)
+        if user is None:
+            raise ValueError("no user with such telegram id")
+        
+        if user.role not in [ADMIN, SUPER_ADMIN, OWNER]:
+            raise ValueError("this user doesn't have permission for handler")
+
         suggests = self.suggest_repository.get_all()
         if suggests is None:
             return None
@@ -59,6 +66,9 @@ class SuggestService:
         if user is None:
             logging.warning("no user with telegram_id: %s", telegram_id)
             raise ValueError("no such user")
+        
+        if user.role not in [ADMIN, SUPER_ADMIN, OWNER]:
+            raise ValueError("this user doesn't have permission for handler")
 
         suggest = self.suggest_repository.get_by_uuid(suggest_uuid)
         if suggest is None:

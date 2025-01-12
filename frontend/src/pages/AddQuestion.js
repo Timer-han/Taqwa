@@ -47,6 +47,7 @@ const AddQuestion = () => {
     } catch (error) {
       console.log("Ошибка: ", error)
       alert("Ошибка, попробуйте снова:", error)
+      return
     } finally {
       alert("Вопрос успешно добавлен!");
       setQuestion("");

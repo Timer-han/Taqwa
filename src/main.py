@@ -16,7 +16,7 @@ from internal.service.user import UserService
 from internal.service.suggest import SuggestService
 from internal.service.question import QuestionService
 from internal.delivery.bot.bot import BotHandler
-from internal.delivery.http.question import QuestionHTTPHandler
+from internal.delivery.http.suggest import SuggestHTTPHandler
 from internal.middleware.auth import AuthMiddleware
 from config.config import load_config
 from pkg.logger.logger import *
@@ -54,7 +54,7 @@ def setup_fastapi_routes():
     question_service = QuestionService(question_repository)
 
     # HTTP Handlers
-    question_handler = QuestionHTTPHandler(cfg, user_service, suggest_service, question_service)
+    question_handler = SuggestHTTPHandler(cfg, user_service, suggest_service, question_service)
 
     app.include_router(question_handler.router)
 

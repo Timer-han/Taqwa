@@ -1,5 +1,5 @@
-// const url = "api/"
-const url = "http://localhost:4000/"
+const url = "api/"
+// const url = "http://localhost:4000/"
 
 export const addQuestion = async (question, answers, correctAnswer, description) => {
     const token = getAuthToken();
@@ -7,7 +7,7 @@ export const addQuestion = async (question, answers, correctAnswer, description)
       throw new Error("Ты не авторизован, пожалуйста перейди по ссылке бота");
     }
 
-    const uri = url + "question/suggest";
+    const uri = url + "suggest";
     console.log("uri: ", uri)
 
     if (answers.length > 5 || answers.length < 2) {
@@ -45,7 +45,7 @@ export const getSuggests = async () => {
       throw new Error("Ты не авторизован, пожалуйста перейди по ссылке бота");
     }
 
-    const uri = url + "question/suggests";
+    const uri = url + "suggest/all";
     console.log("uri: ", uri);
 
     const response = await fetch(uri, {
@@ -73,7 +73,7 @@ export const getNonReviewedSuggests = async () => {
       throw new Error("Ты не авторизован, пожалуйста перейди по ссылке бота");
     }
 
-    const uri = url + "question/review-suggests";
+    const uri = url + "suggest/review";
     console.log("uri: ", uri);
 
     const response = await fetch(uri, {
@@ -101,7 +101,7 @@ export const getSuggest = async (uuid) => {
       throw new Error("Ты не авторизован, пожалуйста перейди по ссылке бота");
     }
 
-    const uri = url + "question/suggest?uuid=" + uuid;
+    const uri = url + "suggest?uuid=" + uuid;
     console.log("uri: ", uri);
 
     const response = await fetch(uri, {
@@ -129,7 +129,7 @@ export const sendFeedback = async (type, uuid, comment) => {
       throw new Error("Ты не авторизован, пожалуйста перейди по ссылке бота");
     }
 
-    const uri = "".concat(url, "question/suggest/review?uuid=", uuid.uuid);
+    const uri = "".concat(url, "suggest/make-review?uuid=", uuid.uuid);
     console.log("uri: ", uri);
 
     if ((type === "bad" || type === "improve") && (!comment.trim())) {
@@ -140,8 +140,6 @@ export const sendFeedback = async (type, uuid, comment) => {
         type,
         comment,
     };
-
-    console.log("payload: ", payload)
 
     try {
         const response = await fetch(uri, {

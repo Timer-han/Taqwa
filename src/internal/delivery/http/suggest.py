@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import APIRouter, Header, Request, HTTPException
+from fastapi.responses import JSONResponse
 from datetime import datetime
 
 from uuid import uuid4, UUID
@@ -15,18 +16,18 @@ from pkg.constants.review import *
 from pkg.utils.utils import *
 
 
-class QuestionHTTPHandler:
+class SuggestHTTPHandler:
     def __init__(self, cfg: Config, user_svc: UserService, suggest_svc: SuggestService, question_svc: QuestionService):
         self.cfg = cfg
         self.user_service = user_svc
         self.suggest_service = suggest_svc
         self.question_service = question_svc
 
-        self.router = APIRouter(prefix='/question', tags=['question'])
+        self.router = APIRouter(prefix='/suggest', tags=['suggest'])
         self.register_handlers()
 
     def register_handlers(self):
-        @self.router.post("/suggest")
+        @self.router.post("/")
         async def suggest_handler(request: Request, body: SuggestRequest, authorization: str = Header(None)):
             user_telegram_id = int(getattr(request.state, "telegram_id"))
             if not user_telegram_id:
@@ -44,7 +45,7 @@ class QuestionHTTPHandler:
 
             return {"message": "saved question"}
         
-        @self.router.get("/suggests")
+        @self.router.get("/all")
         async def get_suggests():
             suggests = self.suggest_service.get_all()
             if suggests is None:
@@ -52,19 +53,24 @@ class QuestionHTTPHandler:
             
             return {"suggests": suggests}
         
-        @self.router.get("/review-suggests")
+        @self.router.get("/review")
         async def get_review_suggests(request: Request):
             user_telegram_id = int(getattr(request.state, "telegram_id"))
             if not user_telegram_id:
                 return {"error": "Unauthorized access"}
             
-            suggests = self.suggest_service.get_all_for_review(int(user_telegram_id))
-            if suggests is None:
-                return {"message": "no questions"}
+            try:
+                suggests = self.suggest_service.get_all_for_review(int(user_telegram_id))
+                if suggests is None:
+                    return {"message": "no questions"}
+            except ValueError as e:
+                return JSONResponse(
+                    status_code=500, content={"error": "error"}
+                )
             
             return {"suggests": suggests}
         
-        @self.router.get("/suggest")
+        @self.router.get("/")
         async def get_suggest_by_uuid(request: Request):
             suggest_uuid = request.query_params.get("uuid")
             logging.info("getting suggest by uuid: %s", suggest_uuid)
@@ -83,19 +89,22 @@ class QuestionHTTPHandler:
             
             return {"suggest": suggest}
     
-        @self.router.post("/suggest/review")
+        @self.router.post("/make-review")
         async def review(request: Request, body: SuggestReview):
             user_telegram_id = int(getattr(request.state, "telegram_id"))
             if not user_telegram_id:
                 return {"error": "Unauthorized access"}
 
             suggest_uuid = request.query_params.get("uuid")
-            logging.info("suggest_review_handler: %s", body)
-            logging.info("suggest_uuid: %s", suggest_uuid)
 
-            if body.type == GOOD_BUTTON:
-                self.suggest_service.mark_as_correct(suggest_uuid, user_telegram_id)
-            elif body.type == BAD_BUTTON:
-                self.suggest_service.mark_as_bad(suggest_uuid, body.comment, user_telegram_id)
-            elif body.type == IMPROVE_BUTTON:
-                self.suggest_service.mark_as_improve(suggest_uuid, body.comment, user_telegram_id)
+            try:
+                if body.type == GOOD_BUTTON:
+                    self.suggest_service.mark_as_correct(suggest_uuid, user_telegram_id)
+                elif body.type == BAD_BUTTON:
+                    self.suggest_service.mark_as_bad(suggest_uuid, body.comment, user_telegram_id)
+                elif body.type == IMPROVE_BUTTON:
+                    self.suggest_service.mark_as_improve(suggest_uuid, body.comment, user_telegram_id)
+            except ValueError as e:
+                return JSONResponse(
+                    status_code=500, content={"error": e}
+                )
