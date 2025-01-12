@@ -1,5 +1,5 @@
-const url = "api/"
-// const url = "http://localhost:4000/"
+// const url = "api/"
+const url = "http://localhost:4000/"
 
 export const addQuestion = async (question, answers, correctAnswer, description) => {
     const token = getAuthToken();
@@ -46,6 +46,34 @@ export const getSuggests = async () => {
     }
 
     const uri = url + "question/suggests";
+    console.log("uri: ", uri);
+
+    const response = await fetch(uri, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    console.log("response: ", response);
+    if (!response.ok) {
+        throw new Error("Ошибка загрузки вопросов");
+    }
+
+    try {
+        const data = await response.json();
+        console.log("data: ", data);
+        return data.suggests;
+    } catch (err) {
+        throw new Error("Ошибка форматирования");
+    }
+};
+
+export const getNonReviewedSuggests = async () => {
+    const token = getAuthToken();
+    if (!token) {
+      throw new Error("Ты не авторизован, пожалуйста перейди по ссылке бота");
+    }
+
+    const uri = url + "question/review-suggests";
     console.log("uri: ", uri);
 
     const response = await fetch(uri, {

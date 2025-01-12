@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "../css/Feedback.css"
 import { sendFeedback } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 const Feedback = (uuid) => {
     const [feedbackType, setFeedbackType] = useState("");
     const [comment, setComment] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmitFeedback = async (type, commentText = "") => {
         try {
@@ -14,9 +16,10 @@ const Feedback = (uuid) => {
             console.log("Ошибка: ", error)
             alert("Ошибка, попробуйте снова:", error)
         } finally {
-            alert("Ваш отзыв отправлен, спасибо)")
             setFeedbackType("");
             setComment("");
+            navigate("/review")
+            // alert("Ваш отзыв отправлен, спасибо)")
         }
     }
 

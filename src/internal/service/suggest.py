@@ -31,6 +31,23 @@ class SuggestService:
     def get_all(self) -> List[Suggest]:
         return self.suggest_repository.get_all()
     
+    def get_all_for_review(self, telegram_id: int) -> List[Suggest]:
+        suggests = self.suggest_repository.get_all()
+        if suggests is None:
+            return None
+        
+        response = []
+        for suggest in suggests:
+            in_marked_as_correct = any(check.telegram_id == telegram_id for check in (suggest.marked_as_correct or []))
+            in_marked_as_erroneous = any(check.telegram_id == telegram_id for check in (suggest.marked_as_erroneous or []))
+            in_marked_as_improve = any(check.telegram_id == telegram_id for check in (suggest.marked_as_improve or []))
+            
+            if not (in_marked_as_correct or in_marked_as_erroneous or in_marked_as_improve):
+                response.append(suggest)
+        
+        return response
+        
+    
     def get_by_uuid(self, uuid: str) -> Suggest:
         return self.suggest_repository.get_by_uuid(uuid)
 

@@ -20,9 +20,9 @@ const QuestionDetail = () => {
 
         const telegram_id = parseAuthToken()
         const processedSuggest = {
-          marked_as_correct: suggest.marked_as_correct.map((item) => String(item.telegram_id)),
-          marked_as_erroneus: suggest.marked_as_erroneous.map((item) => String(item.telegram_id)),
-          marked_as_improve: suggest.marked_as_improve.map((item) => String(item.telegram_id)),
+          marked_as_correct: (suggest.marked_as_correct || []).map((item) => String(item.telegram_id)),
+          marked_as_erroneus: (suggest.marked_as_erroneous || []).map((item) => String(item.telegram_id)),
+          marked_as_improve: (suggest.marked_as_improve || []).map((item) => String(item.telegram_id)),
         };
 
         let reviewed = false;

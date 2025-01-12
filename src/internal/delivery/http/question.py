@@ -52,6 +52,18 @@ class QuestionHTTPHandler:
             
             return {"suggests": suggests}
         
+        @self.router.get("/review-suggests")
+        async def get_review_suggests(request: Request):
+            user_telegram_id = int(getattr(request.state, "telegram_id"))
+            if not user_telegram_id:
+                return {"error": "Unauthorized access"}
+            
+            suggests = self.suggest_service.get_all_for_review(int(user_telegram_id))
+            if suggests is None:
+                return {"message": "no questions"}
+            
+            return {"suggests": suggests}
+        
         @self.router.get("/suggest")
         async def get_suggest_by_uuid(request: Request):
             suggest_uuid = request.query_params.get("uuid")

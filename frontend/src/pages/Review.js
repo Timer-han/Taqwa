@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getSuggests } from "../services/api";
+import { getNonReviewedSuggests } from "../services/api";
 import SuggestCard from "../components/SuggestCard";
 import "../css/Review.css"
 
@@ -12,7 +12,7 @@ const Review = () => {
     useEffect(() => {
         const loadSuggestedQuestions = async () => {
             try {
-                const suggests = await getSuggests();
+                const suggests = await getNonReviewedSuggests();
                 setSuggests(suggests);
             } catch (err) {
                 console.log(err);

@@ -24,7 +24,6 @@ class SuggestRepository:
         
         for value in documents:
             suggest = {field: value.get(field) for field in Suggest.__annotations__.keys()}
-            logging.info("getting suggest: %s", suggest)
             suggests.append(Suggest(**suggest))
         
         return suggests
