@@ -79,6 +79,7 @@ class QuestionHTTPHandler:
 
             suggest_uuid = request.query_params.get("uuid")
             logging.info("suggest_review_handler: %s", body)
+            logging.info("suggest_uuid: %s", suggest_uuid)
 
             if body.type == GOOD_BUTTON:
                 self.suggest_service.mark_as_correct(suggest_uuid, user_telegram_id)

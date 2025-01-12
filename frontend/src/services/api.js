@@ -1,4 +1,4 @@
-const url = "http://localhost:4000/"
+const url = "api/"
 
 export const addQuestion = async (question, answers, correctAnswer, description) => {
     const token = getAuthToken();
@@ -43,7 +43,7 @@ export const getSuggests = async () => {
     if (!token) {
       throw new Error("Ты не авторизован, пожалуйста перейди по ссылке бота");
     }
-    
+
     const uri = url + "question/suggests";
     console.log("uri: ", uri);
 
@@ -100,7 +100,7 @@ export const sendFeedback = async (type, uuid, comment) => {
       throw new Error("Ты не авторизован, пожалуйста перейди по ссылке бота");
     }
 
-    const uri = url + "question/suggest/review/?uuid=" + uuid;
+    const uri = "".concat(url, "question/suggest/review?uuid=", uuid.uuid);
     console.log("uri: ", uri);
 
     if ((type === "bad" || type === "improve") && (!comment.trim())) {
@@ -111,6 +111,8 @@ export const sendFeedback = async (type, uuid, comment) => {
         type,
         comment,
     };
+
+    console.log("payload: ", payload)
 
     try {
         const response = await fetch(uri, {

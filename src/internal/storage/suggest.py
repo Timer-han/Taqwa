@@ -84,4 +84,5 @@ class SuggestRepository:
         return None
     
     def update(self, suggest: Suggest):
+        logging.info("updating suggest: %s", suggest)
         self.collection.replace_one({"uuid": suggest.uuid}, suggest.model_dump(exclude_none=True))

@@ -3,46 +3,45 @@ import "../css/Feedback.css"
 import { sendFeedback } from "../services/api";
 
 const Feedback = (uuid) => {
-    const [feedbackType, setFeedbackType] = useState(null);
+    const [feedbackType, setFeedbackType] = useState("");
     const [comment, setComment] = useState("");
 
-    const handleSubmitFeedback = async () => {
+    const handleSubmitFeedback = async (type, commentText = "") => {
         try {
-            await sendFeedback(feedbackType, uuid, comment);
+            console.log("feedback and comment: ", type, commentText)
+            await sendFeedback(type, uuid, commentText);
         } catch (error) {
             console.log("Ошибка: ", error)
             alert("Ошибка, попробуйте снова:", error)
         } finally {
             alert("Ваш отзыв отправлен, спасибо)")
-            setFeedbackType(null);
+            setFeedbackType("");
             setComment("");
         }
     }
 
+    const handleFeedbackClick = (type) => {
+        console.log("type:", type)
+        setFeedbackType("good");
+        if (type === "good") {
+            handleSubmitFeedback(type);
+        }
+    };
+
     return <div className="feedback">
         <div className="feedback-buttons">
             <button
-                onClick={() => {
-                    setFeedbackType("good");
-                    setComment("");
-                    handleSubmitFeedback();
-                }}
+                onClick={() => handleFeedbackClick("good")}
                 className={`button-good ${feedbackType === "good" ? "selected" : ""}`}
             >Хороший вопрос</button>
 
             <button
-                onClick={() => {
-                    setFeedbackType("bad");
-                    setComment("");
-                }}
+                onClick={() => handleFeedbackClick("bad")}
                 className={`button-bad ${feedbackType === "bad" ? "selected" : ""}`}
             >Плохой вопрос</button>
 
             <button
-                onClick={() => {
-                    setFeedbackType("improve");
-                    setComment(""); // Сбрасываем комментарий
-                }}
+                onClick={() => handleFeedbackClick("improve")}
                 className={`button-improve ${feedbackType === "improve" ? "selected" : ""}`}
             >Я бы улучшил</button>
         </div>
@@ -54,7 +53,7 @@ const Feedback = (uuid) => {
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Напишите свой комментарий..."
             />
-            <button onClick={handleSubmitFeedback}>Отправить</button>
+            <button onClick={handleSubmitFeedback(feedbackType, comment)}>Отправить</button>
             </div>
         )}
         </div>
