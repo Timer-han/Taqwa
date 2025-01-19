@@ -19,11 +19,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         auth_header = request.headers.get("Authorization")
-        logging.info("auth_header: %s", auth_header)
 
         if auth_header and auth_header.startswith("Bearer "):
             token = auth_header[len("Bearer "):]
-            logging.info("token: %s", token)
 
             try:
                 decoded = base64.urlsafe_b64decode(token).decode()

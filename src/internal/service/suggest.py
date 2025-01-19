@@ -9,6 +9,7 @@ from internal.models.suggest import Suggest, Check
 from internal.models.user import User
 from pkg.mappings.check_need import *
 from pkg.constants.constants import *
+from pkg.errors.errors import *
 
 class SuggestService:
     def __init__(self, suggest: SuggestRepository, user: UserRepository):
@@ -34,10 +35,10 @@ class SuggestService:
     def get_all_for_review(self, telegram_id: int) -> List[Suggest]:
         user = self.user_repository.user_by_telegram_id(telegram_id)
         if user is None:
-            raise ValueError("no user with such telegram id")
+            raise UserNotFoundError("no user with such telegram id")
         
         if user.role not in [ADMIN, SUPER_ADMIN, OWNER]:
-            raise ValueError("this user doesn't have permission for handler")
+            raise PermissionDeniedError("this user doesn't have permission for handler")
 
         suggests = self.suggest_repository.get_all()
         if suggests is None:

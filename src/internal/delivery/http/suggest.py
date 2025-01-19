@@ -14,6 +14,7 @@ from config.config import Config
 from pkg.constants.constants import *
 from pkg.constants.review import *
 from pkg.utils.utils import *
+from pkg.errors.errors import *
 
 
 class SuggestHTTPHandler:
@@ -56,19 +57,27 @@ class SuggestHTTPHandler:
         @self.router.get("/review")
         async def get_review_suggests(request: Request):
             user_telegram_id = int(getattr(request.state, "telegram_id"))
+            logging.info("user_telegram_id: %s", user_telegram_id)
             if not user_telegram_id:
-                return {"error": "Unauthorized access"}
+                return {"status": "error", "message": "Пользователь не авторизован, нужно перейти по ссылке из бота"}
             
             try:
                 suggests = self.suggest_service.get_all_for_review(int(user_telegram_id))
-                if suggests is None:
-                    return {"message": "no questions"}
-            except ValueError as e:
+            except UserNotFoundError:
                 return JSONResponse(
-                    status_code=500, content={"error": "error"}
+                    status_code=404, content={"status": "error", "message": "Пользователь не найден"}
+                )
+            except PermissionDeniedError:
+                return JSONResponse(
+                    status_code=403, content={"status": "error", "message": "У вас нет прав для выполнения этого действия"}
+                )
+            except Exception as e:
+                logging.error("error occured in get_review_suggests: %s", e)
+                return JSONResponse(
+                    status_code=500, content={"status": "error", "message": "Ошибка сервера, пожалуйста обратись в поддержку"}
                 )
             
-            return {"suggests": suggests}
+            return {"length": len(suggests), "suggests": suggests}
         
         @self.router.get("/")
         async def get_suggest_by_uuid(request: Request):

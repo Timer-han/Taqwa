@@ -15,8 +15,7 @@ const Review = () => {
                 const suggests = await getNonReviewedSuggests();
                 setSuggests(suggests);
             } catch (err) {
-                console.log(err);
-                setError("Ошибка загрузки, обратись в поддержку")
+                setError(`Ошибка: ${err.message}`)
             } finally {
                 setLoading(false);
             }
