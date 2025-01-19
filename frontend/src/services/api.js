@@ -67,6 +67,7 @@ export const getSuggests = async () => {
 };
 
 export const getNonReviewedSuggests = async () => {
+    console.log("REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
     const token = getAuthToken();
     if (!token) {
       throw new Error("Ты не авторизован, пожалуйста перейди по ссылке бота");

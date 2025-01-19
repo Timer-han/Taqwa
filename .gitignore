@@ -5,4 +5,4 @@
 __pycache__/
 /frontend/node_modules/
 /logs/
-/frontend/.env
+# /frontend/.env
