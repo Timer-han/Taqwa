@@ -21,6 +21,10 @@ services:
     restart: always
     ports:
       - 4000:4000
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - LOG_FILE=/app/logs/app.log
   
   frontend:
     build:

@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from fastapi.middleware.cors import CORSMiddleware
+from logging.handlers import RotatingFileHandler
 
 from internal.storage.mongo import MongoDatabase
 from internal.storage.user import UserRepository
@@ -33,10 +34,20 @@ app.add_middleware(
 )
 
 app.add_middleware(AuthMiddleware, secret_key=cfg.app.secret_key)
+
+LOG_FILE = "/app/logs/app.log"
+file_handler = RotatingFileHandler(
+    LOG_FILE, maxBytes=10 * 1024 * 1024, backupCount=3
+)
+
 logging.basicConfig(
     format=LOG_FORMAT,
     datefmt=LOG_DATE_FORMAT,
     level=LOG_LEVEL,
+    handlers=[
+        file_handler,
+        logging.StreamHandler(),
+    ]
 )
 
 
