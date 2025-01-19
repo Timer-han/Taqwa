@@ -1,5 +1,5 @@
-// const url = "api/"
-const url = "http://localhost:4000/"
+const url = "api/"
+// const url = "http://localhost:4000/"
 
 export const addQuestion = async (question, answers, correctAnswer, description) => {
     const token = getAuthToken();
@@ -91,7 +91,6 @@ export const getNonReviewedSuggests = async () => {
     try {
         const data = await response.json();
         console.log("data: ", data);
-        console.log("status: ", data.status())
 
         if (data.status === "error") {
             throw new Error(data.message)
