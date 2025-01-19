@@ -1,5 +1,4 @@
-const url = "api/"
-// const url = "http://localhost:4000/"
+const url = "http://" + process.env.REACT_APP_API_URL + "/api/"
 
 export const addQuestion = async (question, answers, correctAnswer, description) => {
     const token = getAuthToken();
