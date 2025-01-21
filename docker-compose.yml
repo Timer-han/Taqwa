@@ -30,14 +30,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        REACT_APP_API_URL: ${REACT_APP_API_URL}
     container_name: frontend
     restart: always
     ports:
       - 3000:3000
-    env_file:
-      - ./frontend/.env
   
   nginx:
     image: nginx:latest
