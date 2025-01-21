@@ -36,6 +36,8 @@ services:
       - 3000:3000
     env_file:
       - ./frontend/.env
+    args:
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
   
   nginx:
     image: nginx:latest

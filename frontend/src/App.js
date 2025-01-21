@@ -9,6 +9,7 @@ function App() {
   return (
     <>
       <NavBar />
+      <p>{"this is env: " + process.env.REACT_APP_API_URL}</p>
       <main>
         <Routes>
           <Route path="/" element={<AddQuestion />} />

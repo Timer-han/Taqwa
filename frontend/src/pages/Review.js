@@ -31,7 +31,6 @@ const Review = () => {
           <div className="loading">Loading...</div>
         ) : (
           <div className="suggests-grid">
-            <p>{"this is env: " + process.env.REACT_APP_API_URL}</p>
             {suggests.map((suggest) => (
               <Link className="suggests-link" to={`/review/${suggest.uuid}`}>
                 <SuggestCard suggest={suggest} key={suggest.uuid} />
