@@ -41,6 +41,7 @@ class BotHandler:
                 telegram_id=message.from_user.id,
                 telegram_username=message.from_user.username,
             )
+            logging.info("I'm here!")
             response, is_existed_before = self.user_service.start_bot_using(user)
             if is_existed_before:
                 await message.answer(START_HANDLER_RESPONSE_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))

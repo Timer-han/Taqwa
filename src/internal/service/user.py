@@ -3,7 +3,7 @@ from datetime import datetime
 
 from internal.storage.user import UserRepository
 from internal.models.user import *
-from pkg.constants.roles import USER, ADMIN
+from pkg.constants.roles import USER, ADMIN, NOBODY
 
 
 class UserService:
@@ -13,7 +13,7 @@ class UserService:
     # start_bot_using saving user and returns him and is he existed before
     def start_bot_using(self, user: User):
         db_user = self.repository.user_by_telegram_id(user.telegram_id)
-        if db_user is not None:
+        if not (db_user is None or db_user.role == NOBODY):
             return db_user, True
 
         user.uuid = str(uuid4())

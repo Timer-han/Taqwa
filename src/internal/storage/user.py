@@ -18,6 +18,7 @@ class UserRepository:
         logging.info("telegram_id: '%s'", telegram_id)
         document = self.collection.find_one({telegram_id_column: telegram_id})
         logging.info("user: %s", document)
+
         if document is None:
             return User(role=NOBODY)
 
@@ -26,14 +27,14 @@ class UserRepository:
         return User(**user_data)
 
     def create_user(self, user: User):
-        logging.info("creating_user: %s", user.dict(exclude_none=True))
-        self.collection.insert_one(user.dict(exclude_none=True))
+        logging.info("creating_user: %s", user.model_dump(exclude_none=True))
+        self.collection.insert_one(user.model_dump(exclude_none=True))
 
     def update_user(self, user: User):
-        logging.info("updating_user: %s", user.dict(exclude_none=True))
+        logging.info("updating_user: %s", user.model_dump(exclude_none=True))
         document = self.collection.find_one_and_update(
             {uuid_column: user.uuid},
-            {"$set": user.dict(exclude_none=True)},
+            {"$set": user.model_dump(exclude_none=True)},
             return_document=True,
         )
 
