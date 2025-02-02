@@ -128,6 +128,7 @@ class BotHandler:
             logging.info("correct answer %s chosen", correct_answer)
 
             if not correct_answer.isnumeric():
+                await state.clear()
                 await callback.answer("Что-то тут не так, если не получается решить проблему, напиши нам)")
                 return
             
@@ -146,7 +147,7 @@ class BotHandler:
             logging.info("receive description: %s", message.text)
 
             await state.update_data(description=message.text)
-            await message.answer(DIFFICULTY_NEED_MSG, parse_mode='HTML')
+            await message.answer(DIFFICULTY_NEED_MSG, parse_mode='HTML', reply_markup=CANCEL_KBD)
             await state.set_state(SuggestQuestionState.waiting_for_difficulty)
 
         @self.router.message(SuggestQuestionState.waiting_for_difficulty)
@@ -161,7 +162,11 @@ class BotHandler:
 
             difficulty = message.text
             if not difficulty.isnumeric():
-                await message.answer("Что-то тут не так, если не получается решить проблему, напиши нам)")
+                await message.answer("Пожалуйста, введи число)")
+                return
+            
+            if int(difficulty) < 0 or int(difficulty) > 100:
+                await message.answer("От 1 до 100)")
                 return
 
             question = await state.get_value("question")

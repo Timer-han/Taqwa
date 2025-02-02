@@ -62,7 +62,7 @@ DESCRIPTION_NEED_MSG = (
 )
 
 DIFFICULTY_NEED_MSG = (
-    "Добавь уровено сложности вопроса по шкале от 1 до 100"
+    "Оцени сложность своего вопроса по шкале от 1 до 100"
 )
 
 QUESTION_SUGGEST_GRATITUDE_MSG = (
