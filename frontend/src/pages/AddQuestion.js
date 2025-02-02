@@ -7,6 +7,7 @@ const AddQuestion = () => {
   const [answers, setAnswers] = useState(["", "", "", ""]); // Массив с вариантами ответа
   const [correctAnswer, setCorrectAnswer] = useState(""); // Верный ответ
   const [description, setDescription] = useState("");
+  const [difficulty, setDifficulty] = useState(null);
 
   // Обновляем значение вопроса
   const handleQuestionChange = (e) => {
@@ -39,11 +40,32 @@ const AddQuestion = () => {
     setDescription(e.target.value);
   };
 
+  const handleDifficultyChange = (e) => {
+    if (e.target.value === "") {
+      setDifficulty(null);
+      return
+    }
+
+    setDifficulty(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    let currDifficulty
     try {
-      await addQuestion(question, answers, correctAnswer, description);
+      currDifficulty = parseInt(difficulty);
+      if (currDifficulty < 1 || currDifficulty > 100) {
+        alert("Сложность должна быть от 1 до 100")
+        return
+      }
+    } catch (error) {
+      alert("Введите число")
+      return
+    }
+
+    try {
+      await addQuestion(question, answers, correctAnswer, description, currDifficulty);
     } catch (error) {
       console.log("Ошибка: ", error)
       alert("Ошибка, попробуйте снова:", error)
@@ -54,6 +76,7 @@ const AddQuestion = () => {
       setAnswers(["", "", "", ""]);
       setCorrectAnswer("");
       setDescription("");
+      setDifficulty(null);
     }
   };
 
@@ -130,6 +153,18 @@ const AddQuestion = () => {
             onChange={handleDescriptionChange}
             placeholder="Пояснение к вопросу, если пользователь ответит неверно"
             className="description-input"
+          />
+        </div>
+
+        {/* Сложность */}
+        <div>
+          <label className="difficulty-label">Сложность:</label>
+          <input 
+            type="text"
+            value={difficulty}
+            onChange={handleDifficultyChange}
+            placeholder="Сложность от 1 до 100"
+            className="difficulty-input"
           />
         </div>
 

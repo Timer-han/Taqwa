@@ -144,16 +144,38 @@ class BotHandler:
                 return
             
             logging.info("receive description: %s", message.text)
+
+            await state.update_data(description=message.text)
+            await message.answer(DIFFICULTY_NEED_MSG, parse_mode='HTML')
+            await state.set_state(SuggestQuestionState.waiting_for_difficulty)
+
+        @self.router.message(SuggestQuestionState.waiting_for_difficulty)
+        async def receive_difficulty(message: Message, state: FSMContext):
+            if message.text == cancel:
+                logging.info("sent cancel question message")
+                await state.clear()
+                await message.answer(QUESTION_CANCEL_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
+                return
+            
+            logging.info("receive difficulty: %s", message.text)
+
+            difficulty = message.text
+            if not difficulty.isnumeric():
+                await message.answer("Что-то тут не так, если не получается решить проблему, напиши нам)")
+                return
+
             question = await state.get_value("question")
             answers = await state.get_value("answers")
             correct_id = await state.get_value("correct_id")
+            description = await state.get_value("description")
             suggest = Suggest(
                 question=question,
                 answers=answers,
                 correct_id=correct_id,
-                description=message.text,
+                description=description,
+                difficulty=int(difficulty),
             )
-            
+
             self.suggest_service.create_suggest(suggest, message.from_user.id)
 
             await state.clear()

@@ -16,7 +16,8 @@
 .question-label,
 .answers-label,
 .correct-label,
-.description-label {
+.description-label
+.difficulty-label {
   display: block;
   margin: 10px 0 5px;
 }
@@ -24,6 +25,7 @@
 .question-input,
 .answers-input,
 .description-input,
+.difficulty-input,
 .correct-select,
 .remove-button,
 .add-button,

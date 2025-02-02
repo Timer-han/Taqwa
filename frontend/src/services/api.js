@@ -1,7 +1,7 @@
 const url = "http://localhost/api/"
 // const url = "http://localhost:4000/"
 
-export const addQuestion = async (question, answers, correctAnswer, description) => {
+export const addQuestion = async (question, answers, correctAnswer, description, difficulty) => {
     const token = getAuthToken();
     if (!token) {
       throw new Error("Ты не авторизован, пожалуйста перейди по ссылке бота");
@@ -19,9 +19,12 @@ export const addQuestion = async (question, answers, correctAnswer, description)
         answers,
         correctAnswer,
         description,
+        difficulty,
     };
 
     try {
+        console.log("payload JSON: ", JSON.stringify(payload)); 
+
         const response = await fetch(uri, {
           method: "POST",
           headers: {
@@ -149,6 +152,8 @@ export const sendFeedback = async (type, uuid, comment) => {
     };
 
     try {
+        console.log("payload JSON: ", JSON.stringify(payload)); 
+
         const response = await fetch(uri, {
             method: "POST",
             headers: {

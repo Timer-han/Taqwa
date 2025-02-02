@@ -40,6 +40,7 @@ class SuggestHTTPHandler:
                 answers=body.answers,
                 correct_id=body.correctAnswer,
                 description=body.description,
+                difficulty=body.difficulty,
                 created_at=datetime.now(),
             )
             self.suggest_service.create_suggest(suggest, user_telegram_id)
