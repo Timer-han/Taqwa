@@ -50,11 +50,14 @@ services:
       - ./certbot/conf/:/etc/nginx/ssl
   
   certbot:
-       image: certbot/certbot
-       volumes:
-        - ./certbot/www/:/var/www/certbot
-        - ./certbot/conf/:/etc/letsencrypt
-
+    image: certbot/certbot
+    depends_on:
+      - nginx
+    container_name: certbot
+    volumes:
+      - ./certbot/www/:/var/www/certbot
+      - ./certbot/conf/:/etc/letsencrypt
+    command: certonly --webroot --webroot-path=/var/www/html --email Timerhan555@yandex.ru --agree-tos --no-eff-email -d taqwa.ru
 
 
 volumes:
