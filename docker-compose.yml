@@ -38,26 +38,15 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx
+    volumes: 
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend/public:/usr/share/nginx/html
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - backend
       - frontend
-    volumes:
-      - ./nginx/conf/:/etc/nginx/conf.d
-      - ./certbot/www:/var/www/certbot
-      - ./certbot/conf/:/etc/nginx/ssl
-  
-  certbot:
-    image: certbot/certbot
-    depends_on:
-      - nginx
-    container_name: certbot
-    volumes:
-      - ./certbot/www/:/var/www/certbot
-      - ./certbot/conf/:/etc/letsencrypt
-    command: certonly --webroot --webroot-path=/var/www/html --email Timerhan555@yandex.ru --agree-tos --no-eff-email -d taqwa.ru
 
 
 volumes:
