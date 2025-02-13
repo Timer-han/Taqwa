@@ -2,7 +2,7 @@
 
 ## How to run
 1. copy .env file to /src
-2. run ```docker-compose up -d``` in root
+2. run ```docker-compose -f docker-compose.local.yml up -d``` in root
 3. if no errors, use bot here: https://t.me/taqwa_test_bot
 
 ### Docker containers:

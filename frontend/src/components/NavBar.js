@@ -7,8 +7,8 @@ function NavBar() {
             <Link to="/">Taqwa</Link>
         </div>
         <div className="navbar-links">
-            <Link to="/" className="nav-link">Предложить вопрос</Link>
-            <Link to="/review" className="nav-link">Проверить вопросы</Link>
+            <Link to="/" className="nav-link">Проверить вопросы</Link>
+            <Link to="/suggest" className="nav-link">Предложить вопрос</Link>
         </div>
     </nav>
 }

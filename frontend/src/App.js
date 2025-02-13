@@ -11,8 +11,8 @@ function App() {
       <NavBar />
       <main>
         <Routes>
-          <Route path="/" element={<AddQuestion />} />
-          <Route path="/review" element={<Review />} />
+          <Route path="/" element={<Review />} />
+          <Route path="/suggest" element={<AddQuestion />} />
           <Route path="/review/:uuid" element={<ReviewDetail />} />
         </Routes>
       </main>
