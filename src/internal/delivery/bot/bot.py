@@ -7,6 +7,7 @@ from aiogram.types import CallbackQuery
 from aiogram.filters import Command
 from aiogram import F
 from aiogram.fsm.context import FSMContext
+from aiogram.enums import ParseMode
 
 from internal.service.user import UserService
 from internal.service.suggest import SuggestService
@@ -41,13 +42,23 @@ class BotHandler:
                 telegram_id=message.from_user.id,
                 telegram_username=message.from_user.username,
             )
-            logging.info("I'm here!")
+
             response, is_existed_before = self.user_service.start_bot_using(user)
-            if is_existed_before:
-                await message.answer(START_HANDLER_RESPONSE_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
+
+            token = generate_token(message.from_user.id, self.cfg.app.secret_key)
+            url = self.cfg.other.dns_name + "?token=" + token
+
+            if "localhost" in self.cfg.other.dns_name:
+                await message.answer(PROFILE_MSG + ": " + url, parse_mode="HTML", reply_markup=self.set_main_menu_kbd(message.from_user.id))
             else:
-                # display buttons for determine level of knowledge
-                await message.answer(KNOWLEDGE_LEVEL_DETERMINE_MSG, reply_markup=KNOWLEDGE_LEVEL_DETERMINE_KBD)
+                await message.answer(PROFILE_MSG.format(url), parse_mode="HTML", reply_markup=self.set_main_menu_kbd(message.from_user.id))
+
+            # TODO: change to USER mode
+            # if is_existed_before:
+            #     await message.answer(START_HANDLER_RESPONSE_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
+            # else:
+            #     # display buttons for determine level of knowledge
+            #     await message.answer(KNOWLEDGE_LEVEL_DETERMINE_MSG, reply_markup=KNOWLEDGE_LEVEL_DETERMINE_KBD)
 
         # /help || bot_help button
         @self.router.message(Command("help"))
@@ -78,7 +89,10 @@ class BotHandler:
             token = generate_token(message.from_user.id, self.cfg.app.secret_key)
             url = self.cfg.other.dns_name + "?token=" + token
 
-            await message.answer(PROFILE_MSG+url, reply_markup=self.set_main_menu_kbd(message.from_user.id))
+            if "localhost" in self.cfg.other.dns_name:
+                await message.answer(PROFILE_MSG + ": " + url, parse_mode="HTML", reply_markup=self.set_main_menu_kbd(message.from_user.id))
+            else:
+                await message.answer(PROFILE_MSG.format(url), parse_mode="HTML", reply_markup=self.set_main_menu_kbd(message.from_user.id))
 
         # /suggest || question_suggest button
         @self.router.message(Command("suggest"))

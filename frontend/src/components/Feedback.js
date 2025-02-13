@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../css/Feedback.css"
 import { sendFeedback } from "../services/api";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 
 const Feedback = (uuid) => {
     const [feedbackType, setFeedbackType] = useState("");
@@ -17,7 +17,7 @@ const Feedback = (uuid) => {
         } finally {
             setFeedbackType("");
             setComment("");
-            navigate("/review")
+            navigate("/", {replace: true} )
             // alert("Ваш отзыв отправлен, спасибо)")
         }
     }

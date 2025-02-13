@@ -12,9 +12,16 @@ bad_review = "bad"
 improve_review = "improve"
 dont_know_review = "dont-know"
 
+# MAIN_MENU_KBD = ReplyKeyboardMarkup(
+#     keyboard=[
+#         [KeyboardButton(text=start_lesson), KeyboardButton(text=bot_help)],
+#         [KeyboardButton(text=profile), KeyboardButton(text=question_suggest)],
+#     ],
+#     resize_keyboard=True,
+# )
+
 MAIN_MENU_KBD = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text=start_lesson), KeyboardButton(text=bot_help)],
         [KeyboardButton(text=profile), KeyboardButton(text=question_suggest)],
     ],
     resize_keyboard=True,

@@ -17,7 +17,8 @@ class UserService:
             return db_user, True
 
         user.uuid = str(uuid4())
-        user.role = USER
+        # TODO: change to USER
+        user.role = ADMIN
         user.created_at = datetime.now()
 
         self.repository.create_user(user)

@@ -17,6 +17,7 @@
   
   .suggest-info {
     padding-top: 1rem;
+    padding-bottom: 1rem;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -35,4 +36,18 @@
     font-size: 0.9rem;
     margin: 0.2rem;
     text-align: center;
+  }
+
+  @media (min-width: 524px) and (max-width: 768px) {
+    .suggest-info {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .suggest-info {
+        padding-left: 5rem;
+        padding-right: 5rem;
+    }
   }
