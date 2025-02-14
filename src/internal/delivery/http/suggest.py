@@ -31,6 +31,7 @@ class SuggestHTTPHandler:
         @self.router.post("/")
         async def suggest_handler(request: Request, body: SuggestRequest, authorization: str = Header(None)):
             user_telegram_id = int(getattr(request.state, "telegram_id"))
+            logging.info("%s: suggesting question", user_telegram_id)
             if not user_telegram_id:
                 return {"error": "Unauthorized access"}
 
@@ -58,7 +59,7 @@ class SuggestHTTPHandler:
         @self.router.get("/review")
         async def get_review_suggests(request: Request):
             user_telegram_id = int(getattr(request.state, "telegram_id"))
-            logging.info("user_telegram_id: %s", user_telegram_id)
+            logging.info("%s: getting question for review", user_telegram_id)
             if not user_telegram_id:
                 return {"status": "error", "message": "Пользователь не авторизован, нужно перейти по ссылке из бота"}
             
@@ -83,7 +84,6 @@ class SuggestHTTPHandler:
         @self.router.get("/")
         async def get_suggest_by_uuid(request: Request):
             suggest_uuid = request.query_params.get("uuid")
-            logging.info("getting suggest by uuid: %s", suggest_uuid)
 
             if not suggest_uuid:
                 raise HTTPException(status_code=400, detail="UUID параметр обязателен")
@@ -102,6 +102,7 @@ class SuggestHTTPHandler:
         @self.router.post("/make-review")
         async def review(request: Request, body: SuggestReview):
             user_telegram_id = int(getattr(request.state, "telegram_id"))
+            logging.info("%s: reviewing question with answer - %s", user_telegram_id, body.type)
             if not user_telegram_id:
                 return {"error": "Unauthorized access"}
 

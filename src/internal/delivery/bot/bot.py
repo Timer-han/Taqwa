@@ -37,7 +37,7 @@ class BotHandler:
         # /start
         @self.router.message(Command("start"))
         async def start_handler(message: Message):
-            logging.info("starting")
+            logging.info("user %s: %s starting bot using", message.from_user.id, message.from_user.username)
             user = User(
                 telegram_id=message.from_user.id,
                 telegram_username=message.from_user.username,
