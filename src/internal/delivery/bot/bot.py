@@ -228,20 +228,22 @@ class BotHandler:
             answer = callback.data.split('_')[1]
             if answer == good_review:
                 suggest_uuid = await state.get_value("suggest_uuid")
-                logging.info("Selected good question button for %s suggest", suggest_uuid)
+                logging.info("selected good question button for %s suggest", suggest_uuid)
 
                 self.suggest_service.mark_as_correct(suggest_uuid, callback.from_user.id)
 
                 await callback.message.edit_text(FINISH_QUESTION_REVIEW_MSG)
-                # await callback.message.answer(FINISH_QUESTION_REVIEW_MSG, reply_markup=self.set_main_menu_kbd(callback.from_user.id))
                 await callback.answer()
                 await state.clear()
             elif answer == bad_review:
-                txt = await state.get_value("text")
-                await callback.message.edit_text(txt, parse_mode='HTML')
+                suggest_uuid = await state.get_value("suggest_uuid")
+                logging.info("selected bad question button for %s suggest", suggest_uuid)
 
-                await callback.message.answer(BAD_QUESTION_REVIEW_MSG, reply_markup=CANCEL_KBD)
-                await state.set_state(SuggestReviewState.waiting_for_bad_question_comment)
+                self.suggest_service.mark_as_bad(suggest_uuid, callback.from_user.id)
+
+                await callback.message.edit_text(FINISH_QUESTION_REVIEW_MSG)
+                await callback.answer()
+                await state.clear()
             elif answer == improve_review:
                 txt = await state.get_value("text")
                 await callback.message.edit_text(txt, parse_mode='HTML')
@@ -254,19 +256,14 @@ class BotHandler:
                 await state.clear()
         
 
-        @self.router.message(SuggestReviewState.waiting_for_bad_question_comment)
-        async def handle_bad_question_comment(message: Message, state: FSMContext):
-            suggest_uuid = await state.get_value("suggest_uuid")
-            logging.info("selected bad question button for %s suggest", suggest_uuid)
-            
-            self.suggest_service.mark_as_bad(suggest_uuid, message.text, message.from_user.id)
-
-            await message.answer(FINISH_QUESTION_REVIEW_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
-            await state.clear()
-        
-
         @self.router.message(SuggestReviewState.waiting_for_improve_question_comment)
         async def handle_improve_question_comment(message: Message, state: FSMContext):
+            if message.text == cancel:
+                logging.info("sent cancel question review message")
+                await state.clear()
+                await message.answer(REVIEW_CANCEL_MSG, reply_markup=self.set_main_menu_kbd(message.from_user.id))
+                return
+            
             suggest_uuid = await state.get_value("suggest_uuid")
             logging.info("selected improve question button for %s suggest", suggest_uuid)
 

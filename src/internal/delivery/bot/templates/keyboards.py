@@ -44,9 +44,9 @@ CANCEL_KBD = ReplyKeyboardMarkup(
 
 QUESTION_REVIEW_KBD = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="Хороший вопрос", callback_data=f"review_{good_review}")],
-        [InlineKeyboardButton(text="Плохой вопрос", callback_data=f"review_{bad_review}")],
-        [InlineKeyboardButton(text="Я бы улучшил", callback_data=f"review_{improve_review}")],
+        [InlineKeyboardButton(text="Вопрос верный", callback_data=f"review_{good_review}")],
+        [InlineKeyboardButton(text="Вопрос неверный", callback_data=f"review_{bad_review}")],
+        [InlineKeyboardButton(text="Есть идеи по улучшению", callback_data=f"review_{improve_review}")],
         [InlineKeyboardButton(text="Я не знаю", callback_data=f"review_{dont_know_review}")],
     ]
 )

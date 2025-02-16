@@ -88,7 +88,7 @@ class SuggestService:
 
         self.suggest_repository.update(suggest)
 
-    def mark_as_bad(self, suggest_uuid: str, comment: str, telegram_id: int):
+    def mark_as_bad(self, suggest_uuid: str, telegram_id: int):
         user = self.user_repository.user_by_telegram_id(telegram_id)
         if user is None:
             logging.warning("no user with telegram_id: %s", telegram_id)
@@ -105,7 +105,6 @@ class SuggestService:
             Check(
                 telegram_id=user.telegram_id,
                 telegram_username=user.telegram_username,
-                comment=comment,
                 checked_at=datetime.now(),
             )
         )

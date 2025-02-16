@@ -35,17 +35,17 @@ app.add_middleware(
 
 app.add_middleware(AuthMiddleware, secret_key=cfg.app.secret_key)
 
-LOG_FILE = "/app/logs/app.log"
-file_handler = RotatingFileHandler(
-    LOG_FILE, maxBytes=10 * 1024 * 1024, backupCount=3
-)
+# LOG_FILE = "/app/logs/app.log"
+# file_handler = RotatingFileHandler(
+#     LOG_FILE, maxBytes=10 * 1024 * 1024, backupCount=3
+# )
 
 logging.basicConfig(
     format=LOG_FORMAT,
     datefmt=LOG_DATE_FORMAT,
     level=LOG_LEVEL,
     handlers=[
-        file_handler,
+        # file_handler,
         logging.StreamHandler(),
     ]
 )

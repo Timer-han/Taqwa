@@ -18,13 +18,12 @@ const Feedback = (uuid) => {
             setFeedbackType("");
             setComment("");
             navigate("/", {replace: true} )
-            // alert("Ваш отзыв отправлен, спасибо)")
         }
     }
 
     const handleFeedbackClick = (type) => {
         setFeedbackType(type);
-        if (type === "good") {
+        if (type === "good" || type === "bad") {
             handleSubmitFeedback(type);
         }
     };
@@ -34,21 +33,21 @@ const Feedback = (uuid) => {
             <button
                 onClick={() => handleFeedbackClick("good")}
                 className={`button-good ${feedbackType === "good" ? "selected" : ""}`}
-            >Хороший вопрос</button>
+            >Вопрос верный</button>
 
             <button
                 onClick={() => handleFeedbackClick("bad")}
                 className={`button-bad ${feedbackType === "bad" ? "selected" : ""}`}
-            >Плохой вопрос</button>
+            >Вопрос неверный</button>
 
             <button
                 onClick={() => handleFeedbackClick("improve")}
                 className={`button-improve ${feedbackType === "improve" ? "selected" : ""}`}
-            >Я бы улучшил</button>
+            >Есть идеи по улучшению</button>
         </div>
 
         <div className="feedback-comment">
-        {(feedbackType === "bad" || feedbackType === "improve") && (
+        {(feedbackType === "improve") && (
             <div className="feedback-comment">
             <textarea
                 value={comment}

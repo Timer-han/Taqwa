@@ -112,7 +112,7 @@ class SuggestHTTPHandler:
                 if body.type == GOOD_BUTTON:
                     self.suggest_service.mark_as_correct(suggest_uuid, user_telegram_id)
                 elif body.type == BAD_BUTTON:
-                    self.suggest_service.mark_as_bad(suggest_uuid, body.comment, user_telegram_id)
+                    self.suggest_service.mark_as_bad(suggest_uuid, user_telegram_id)
                 elif body.type == IMPROVE_BUTTON:
                     self.suggest_service.mark_as_improve(suggest_uuid, body.comment, user_telegram_id)
             except ValueError as e:

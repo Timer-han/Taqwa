@@ -1,5 +1,5 @@
-const url = "http://localhost/api/"
-// const url = "http://localhost:4000/"
+// const url = "http://localhost/api/"
+const url = "http://localhost:4000/"
 
 export const addQuestion = async (question, answers, correctAnswer, description, difficulty) => {
     const token = getAuthToken();
@@ -142,7 +142,7 @@ export const sendFeedback = async (type, uuid, comment) => {
     const uri = "".concat(url, "suggest/make-review?uuid=", uuid.uuid);
     console.log("uri: ", uri);
 
-    if ((type === "bad" || type === "improve") && (!comment.trim())) {
+    if ((type === "improve") && (!comment.trim())) {
         throw new Error("Введи комментарий пожалуйста");
     }
 
