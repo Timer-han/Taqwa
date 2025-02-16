@@ -1,6 +1,9 @@
 up:
 	docker compose -f docker-compose.local.yml up -d --build
 
+up_show:
+	docker compose -f docker-compose.local.yml up --build
+
 stop:
 	docker compose -f docker-compose.local.yml stop
 

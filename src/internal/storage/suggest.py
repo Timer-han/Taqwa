@@ -67,6 +67,10 @@ class SuggestRepository:
                 if suggest_data.get("marked_as_correct"): checking_array += suggest_data.get("marked_as_correct")
                 if suggest_data.get("marked_as_improve"): checking_array += suggest_data.get("marked_as_improve")
                 if suggest_data.get("marked_as_erroneous"): checking_array += suggest_data.get("marked_as_erroneous")
+                if suggest_data.get("proposing"): checking_array += [suggest_data.get("proposing")]
+
+                logging.info("suggest data:")
+                logging.info(checking_array)
 
                 flag = False
                 for checking_user in checking_array:
