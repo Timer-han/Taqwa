@@ -89,3 +89,17 @@ class SuggestRepository:
     def update(self, suggest: Suggest):
         logging.info("updating suggest: %s", suggest)
         self.collection.replace_one({"uuid": suggest.uuid}, suggest.model_dump(exclude_none=True))
+
+    def get_reviewed_count(self, telegram_id: int) -> int:
+        query = {
+            '$or': [
+                {'marked_as_correct.telegram_id': telegram_id},
+                {'marked_as_erroneous.telegram_id': telegram_id},
+                {'marked_as_improve.telegram_id': telegram_id}
+            ]
+        }
+
+        return self.collection.count_documents(query)
+    
+    def get_total_count(self) -> int:
+        return self.collection.count_documents({})

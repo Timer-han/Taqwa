@@ -71,3 +71,7 @@ class SuggestReview(BaseModel):
     type: Optional[str] = None
     comment: Optional[str] = None
     
+class ReviewedCountResponse(BaseModel):
+    reviewed_count: Optional[int] = None
+    total_count: Optional[int] = None
+    

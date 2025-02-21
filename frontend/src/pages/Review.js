@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getNonReviewedSuggests } from "../services/api";
+import { getNonReviewedSuggests, getReviewedCounts } from "../services/api";
 import SuggestCard from "../components/SuggestCard";
 import "../css/Review.css"
 
@@ -8,6 +8,8 @@ const Review = () => {
     const [suggests, setSuggests] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [reviewedCount, setReviewedCount] = useState(null);
+    const [totalCount, setTotal] = useState(null);
 
     useEffect(() => {
         const loadSuggestedQuestions = async () => {
@@ -21,7 +23,25 @@ const Review = () => {
             }
         };
 
+        const loadReviewedCounts = async () => {
+            try {
+                const data = await getReviewedCounts();
+                console.log(data)
+                console.log(data.reviewed_count)
+                console.log(data.total_count)
+                setReviewedCount(data.reviewed_count);
+                setTotal(data.total_count);
+                console.log(reviewedCount)
+                console.log(totalCount)
+            } catch (err) {
+                console.log(`Ошибка: ${err.message}`)
+            } finally {
+                setLoading(false);
+            }
+        };
+
         loadSuggestedQuestions();
+        loadReviewedCounts();
     }, [])
 
     return (
@@ -38,6 +58,7 @@ const Review = () => {
             ))}
           </div>
         )}
+        {totalCount && <div className="reviewed-counter">{reviewedCount}/{totalCount}</div>}
       </div>
     );
 }

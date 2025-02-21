@@ -18,3 +18,21 @@
     color: inherit;
   }
   
+  .reviewed-counter {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    z-index: 1000;
+}
+
+@media (max-width: 524px) {
+  .reviewed-counter {
+    top: 5px;
+    right: 5px;
+  }
+}

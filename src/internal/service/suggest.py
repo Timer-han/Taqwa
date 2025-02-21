@@ -5,7 +5,7 @@ from typing import List
 
 from internal.storage.suggest import SuggestRepository
 from internal.storage.user import UserRepository
-from internal.models.suggest import Suggest, Check
+from internal.models.suggest import Suggest, Check, ReviewedCountResponse
 from internal.models.user import User
 from pkg.mappings.check_need import *
 from pkg.constants.constants import *
@@ -134,3 +134,12 @@ class SuggestService:
         )
 
         self.suggest_repository.update(suggest)
+
+    def get_reviewed_count(self, telegram_id: int) -> ReviewedCountResponse:        
+        reviewed_count = self.suggest_repository.get_reviewed_count(telegram_id)
+        total_count = self.suggest_repository.get_total_count()
+
+        return ReviewedCountResponse(
+            reviewed_count=reviewed_count,
+            total_count=total_count
+        )

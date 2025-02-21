@@ -105,6 +105,35 @@ export const getNonReviewedSuggests = async () => {
     }
 };
 
+export const getReviewedCounts = async () => {
+    const token = getAuthToken();
+    if (!token) {
+      console.log("Ты не авторизован, пожалуйста перейди по ссылке бота");
+      return
+    }
+
+    const uri = url + "suggest/reviewed-count";
+    console.log("uri: ", uri);
+
+    const response = await fetch(uri, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    console.log("response: ", response);
+    if (!response.ok) {
+        throw new Error("Ошибка загрузки вопросов");
+    }
+
+    try {
+        const data = await response.json();
+        console.log("data: ", data);
+        return data;
+    } catch (err) {
+        throw new Error("Ошибка форматирования");
+    }
+};
+
 export const getSuggest = async (uuid) => {
     const token = getAuthToken();
     if (!token) {

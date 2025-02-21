@@ -119,3 +119,21 @@ class SuggestHTTPHandler:
                 return JSONResponse(
                     status_code=500, content={"error": e}
                 )
+
+        @self.router.get("/reviewed-count")
+        async def get_reviewed_count(request: Request):
+            user_telegram_id = int(getattr(request.state, "telegram_id"))
+            logging.info("%s: getting reviewed count", user_telegram_id)
+            if not user_telegram_id:
+                return {"error": "Unauthorized access"}
+            
+            try:
+                response = self.suggest_service.get_reviewed_count(user_telegram_id)
+            except ValueError as e:
+                return JSONResponse(
+                    status_code=500, content={"error": e}
+                )
+            
+            logging.info("%s: reviewed count: %s", user_telegram_id, response)
+            
+            return response
