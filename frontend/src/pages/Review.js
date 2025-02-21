@@ -26,13 +26,8 @@ const Review = () => {
         const loadReviewedCounts = async () => {
             try {
                 const data = await getReviewedCounts();
-                console.log(data)
-                console.log(data.reviewed_count)
-                console.log(data.total_count)
                 setReviewedCount(data.reviewed_count);
-                setTotal(data.total_count);
-                console.log(reviewedCount)
-                console.log(totalCount)
+                setTotal(data.total_count);                console.log(totalCount)
             } catch (err) {
                 console.log(`Ошибка: ${err.message}`)
             } finally {
